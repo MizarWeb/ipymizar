@@ -1,0 +1,11 @@
+name: ipymizar-dev
+channels:
+    - conda-forge
+dependencies:
+    - python=3.6
+    - pip
+    - yarn
+    - jupyter-packaging
+    - jupyterlab=3
+    - flake8
+    - pytest

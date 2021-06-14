@@ -1,0 +1,28 @@
+*.egg-info/
+*/.ipynb_checkpoints/
+dist/
+build/
+*.py[cod]
+node_modules/
+*package-lock.json
+
+# Compiled javascript
+ipymizar/nbextension/
+ipymizar/labextension/
+js/dist/
+
+# OS X
+.DS_Store
+
+js/jupyter-mizar-*.tgz
+
+# Documentation data files
+docs/*.csv
+docs/*.json
+docs/*.nc
+
+# Untitled Notebooks
+*Untitled*.ipynb
+
+# IDE
+.vscode/
