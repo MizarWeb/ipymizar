@@ -1,5 +1,5 @@
 
-const L = require('../leaflet.js');
+// const L = require('../leaflet.js');
 const layergroup = require('./LayerGroup.js');
 
 export class MizarFeatureGroupModel extends layergroup.MizarLayerGroupModel {

@@ -1,5 +1,4 @@
 import copy
-import asyncio
 
 from ipywidgets import (
     Widget, DOMWidget, Box, CallbackDispatcher, widget_serialization,
@@ -59,17 +58,6 @@ def basemap_to_tiles(basemap, day='yesterday', **kwargs):
         name=basemap.get('name', ''),
         **kwargs
     )
-
-
-def wait_for_change(widget, value):
-    future = asyncio.Future()
-
-    def get_value(change):
-        future.set_result(change.new)
-        widget.unobserve(get_value, value)
-
-    widget.observe(get_value, value)
-    return future
 
 
 class LayerException(TraitError):
@@ -337,8 +325,6 @@ class WMSLayer(TileLayer):
     ----------
     layers: string, default ""
         Comma-separated list of WMS layers to show.
-    styles: string, default ""
-        Comma-separated list of WMS styles
     format: string, default "image/jpeg"
         WMS image format (use `'image/png'` for layers with transparency).
     transparent: boolean, default False
@@ -352,7 +338,6 @@ class WMSLayer(TileLayer):
 
     # Options
     layers = Unicode().tag(sync=True, o=True)
-    styles = Unicode().tag(sync=True, o=True)
     format = Unicode('image/jpeg').tag(sync=True, o=True)
     transparent = Bool(False).tag(sync=True, o=True)
     crs = Dict(default_value=projections.EPSG3857).tag(sync=True)
@@ -690,27 +675,7 @@ class ZoomControl(Control):
     zoom_out_title = Unicode('Zoom out').tag(sync=True, o=True)
 
 
-class MapStyle(Style, Widget):
-    """Map Style Widget
-
-    Custom map style.
-
-    Attributes
-    ----------
-    cursor: str, default 'grab'
-        The cursor to use for the mouse when it's on the map. Should be a valid CSS
-        cursor value.
-    """
-
-    _model_name = Unicode('MizarMapStyleModel').tag(sync=True)
-    _model_module = Unicode("jupyter-mizar").tag(sync=True)
-
-    _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
-
-    cursor = Enum(values=allowed_cursor, default_value='grab').tag(sync=True)
-
-
-class Map(DOMWidget, InteractMixin):
+class Planet(DOMWidget, InteractMixin):
     """Map class.
 
     The Map class is the main widget in ipymizar.
@@ -721,12 +686,8 @@ class Map(DOMWidget, InteractMixin):
         The list of layers that are currently on the map.
     controls: list of Control instances
         The list of controls that are currently on the map.
-    center: list, default [0, 0]
-        The current center of the map.
     zoom: float, default 12
         The current zoom value of the map.
-    zoom_snap: float, default 1
-        Forces the map’s zoom level to always be a multiple of this..
     zoom_delta: float, default 1
         Controls how much the map’s zoom level will change after
         pressing + or - on the keyboard, or using the zoom controls.
@@ -735,8 +696,8 @@ class Map(DOMWidget, InteractMixin):
         ‘EPSG4326’, ‘Base’, ‘Simple’ or user defined projection.
     """
 
-    _view_name = Unicode('MizarMapView').tag(sync=True)
-    _model_name = Unicode('MizarMapModel').tag(sync=True)
+    _view_name = Unicode('MizarPlanetView').tag(sync=True)
+    _model_name = Unicode('MizarPlanetModel').tag(sync=True)
     _view_module = Unicode('jupyter-mizar').tag(sync=True)
     _model_module = Unicode('jupyter-mizar').tag(sync=True)
 
@@ -746,25 +707,20 @@ class Map(DOMWidget, InteractMixin):
     # URL of the window where the map is displayed
     window_url = Unicode(read_only=True).tag(sync=True)
 
+    # For the dummy image
+    src = Unicode("https://lagranderecre-lagranderecre-fr-storage.omn.proximis.com/Imagestorage/imagesSynchro/0/0/ae8adfc9a2047079049f1c0410e37c32f5e882ad_IMG-PRODUCT-828315-2.jpeg").tag(sync=True)
+    width = Int(500).tag(sync=True)
+    height = Int(500).tag(sync=True)
+
     # Map options
-    center = List(def_loc).tag(sync=True, o=True)
     zoom_start = CFloat(12).tag(sync=True, o=True)
     zoom = CFloat(12).tag(sync=True, o=True)
     max_zoom = CFloat(18).tag(sync=True, o=True)
     min_zoom = CFloat(1).tag(sync=True, o=True)
     zoom_delta = CFloat(1).tag(sync=True, o=True)
-    zoom_snap = CFloat(1).tag(sync=True, o=True)
     interpolation = Unicode('bilinear').tag(sync=True, o=True)
     crs = Dict(default_value=projections.EPSG3857).tag(sync=True)
 
-    # Specification of the basemap
-    basemap = Union(
-        (Dict(), Instance(TileLayer)),
-        default_value=dict(
-            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            max_zoom=19,
-            attribution='Map data (c) <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
-        ))
     modisdate = Unicode('yesterday').tag(sync=True)
 
     # Interaction options
@@ -783,85 +739,22 @@ class Map(DOMWidget, InteractMixin):
     inertia = Bool(True).tag(sync=True, o=True)
     inertia_deceleration = Int(3000).tag(sync=True, o=True)
     inertia_max_speed = Int(1500).tag(sync=True, o=True)
-    # inertia_threshold = Int(?, o=True).tag(sync=True)
-    # fade_animation = Bool(?).tag(sync=True, o=True)
-    # zoom_animation = Bool(?).tag(sync=True, o=True)
     zoom_animation_threshold = Int(4).tag(sync=True, o=True)
     fullscreen = Bool(False).tag(sync=True, o=True)
 
     options = List(trait=Unicode()).tag(sync=True)
 
-    style = InstanceDict(MapStyle).tag(sync=True, **widget_serialization)
-    default_style = InstanceDict(MapStyle).tag(sync=True, **widget_serialization)
-    dragging_style = InstanceDict(MapStyle).tag(sync=True, **widget_serialization)
-
     zoom_control = Bool(True)
 
-    @default('dragging_style')
-    def _default_dragging_style(self):
-        return {'cursor': 'move'}
+    layers = Tuple().tag(trait=Instance(Layer), sync=True, **widget_serialization)
 
     @default('options')
     def _default_options(self):
         return [name for name in self.traits(o=True)]
 
-    south = Float(def_loc[0], read_only=True).tag(sync=True)
-    north = Float(def_loc[0], read_only=True).tag(sync=True)
-    east = Float(def_loc[1], read_only=True).tag(sync=True)
-    west = Float(def_loc[1], read_only=True).tag(sync=True)
-
-    bottom = Float(0, read_only=True).tag(sync=True)
-    top = Float(9007199254740991, read_only=True).tag(sync=True)
-    right = Float(0, read_only=True).tag(sync=True)
-    left = Float(9007199254740991, read_only=True).tag(sync=True)
-
-    layers = Tuple().tag(trait=Instance(Layer), sync=True, **widget_serialization)
-
-    @default('layers')
-    def _default_layers(self):
-        basemap = self.basemap if isinstance(self.basemap, TileLayer) else basemap_to_tiles(self.basemap,
-                                                                                            self.modisdate)
-
-        basemap.base = True
-
-        return (basemap,)
-
-    bounds = Tuple(read_only=True)
-    bounds_polygon = Tuple(read_only=True)
-    pixel_bounds = Tuple(read_only=True)
-
-    @observe('south', 'north', 'east', 'west')
-    def _observe_bounds(self, change):
-        self.set_trait('bounds', ((self.south, self.west),
-                                  (self.north, self.east)))
-        self.set_trait('bounds_polygon', ((self.north, self.west),
-                                          (self.north, self.east),
-                                          (self.south, self.east),
-                                          (self.south, self.west)))
-
-    @observe('bottom', 'top', 'right', 'left')
-    def _observe_pixel_bounds(self, change):
-        self.set_trait('pixel_bounds', ((self.left, self.top),
-                                        (self.right, self.bottom)))
-
     def __init__(self, **kwargs):
-        self.zoom_control_instance = None
-
-        super(Map, self).__init__(**kwargs)
+        super(Planet, self).__init__(**kwargs)
         self.on_msg(self._handle_mizar_event)
-
-        if self.zoom_control:
-            self.zoom_control_instance = ZoomControl()
-            self.add_control(self.zoom_control_instance)
-
-    @observe('zoom_control')
-    def observe_zoom_control(self, change):
-        if change['new']:
-            self.zoom_control_instance = ZoomControl()
-            self.add_control(self.zoom_control_instance)
-        else:
-            if self.zoom_control_instance is not None and self.zoom_control_instance in self.controls:
-                self.remove_control(self.zoom_control_instance)
 
     _layer_ids = List()
 
@@ -1009,43 +902,7 @@ class Map(DOMWidget, InteractMixin):
     def on_interaction(self, callback, remove=False):
         self._interaction_callbacks.register_callback(callback, remove=remove)
 
-    def fit_bounds(self, bounds):
-        """Sets a map view that contains the given geographical bounds
-        with the maximum zoom level possible.
+    # Navigation handling
 
-        Parameters
-        ----------
-        bounds: list of lists
-            The lat/lon bounds in the form [[south, west], [north, east]].
-        """
-        asyncio.ensure_future(self._fit_bounds(bounds))
-
-    async def _fit_bounds(self, bounds):
-        (b_south, b_west), (b_north, b_east) = bounds
-        center = b_south + (b_north - b_south) / 2, b_west + (b_east - b_west) / 2
-        if center != self.center:
-            self.center = center
-            await wait_for_change(self, 'bounds')
-        zoomed_out = False
-        # zoom out
-        while True:
-            if self.zoom <= 1:
-                break
-            (south, west), (north, east) = self.bounds
-            if south > b_south or north < b_north or west > b_west or east < b_east:
-                self.zoom -= 1
-                await wait_for_change(self, 'bounds')
-                zoomed_out = True
-            else:
-                break
-        if not zoomed_out:
-            # zoom in
-            while True:
-                (south, west), (north, east) = self.bounds
-                if south < b_south and north > b_north and west < b_west and east > b_east:
-                    self.zoom += 1
-                    await wait_for_change(self, 'bounds')
-                else:
-                    self.zoom -= 1
-                    await wait_for_change(self, 'bounds')
-                    break
+    def zoom_to(self, geo_pos):
+        pass

@@ -2,7 +2,7 @@
 const widgets = require('@jupyter-widgets/base');
 const PMessaging = require('@lumino/messaging');
 const PWidgets = require('@lumino/widgets');
-const L = require('../leaflet.js');
+// const L = require('../leaflet.js');
 const utils = require('../utils.js');
 
 export class MizarLayerModel extends widgets.WidgetModel {

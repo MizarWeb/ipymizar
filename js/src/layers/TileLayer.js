@@ -1,5 +1,5 @@
 
-const L = require('../leaflet.js');
+// const L = require('../leaflet.js');
 const rasterlayer = require('./RasterLayer.js');
 const Spinner = require('spin.js').Spinner;
 

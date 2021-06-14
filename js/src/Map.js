@@ -1,37 +1,18 @@
 
 const widgets = require('@jupyter-widgets/base');
-const L = require('./leaflet.js');
+// const L = require('./leaflet.js');
 const utils = require('./utils.js');
-const proj = require('./projections.js');
+// const proj = require('./projections.js');
 
 const DEFAULT_LOCATION = [0.0, 0.0];
 
 
-
-export class MizarMapStyleModel extends widgets.StyleModel {
+export class MizarPlanetModel extends widgets.DOMWidgetModel {
   defaults() {
     return {
       ...super.defaults(),
-      _model_name: 'MizarMapStyleModel',
-      _model_module: 'jupyter-mizar'
-    };
-  }
-}
-
-MizarMapStyleModel.styleProperties = {
-  cursor: {
-    selector: '.leaflet-grab',
-    attribute: 'cursor',
-    default: 'grab'
-  }
-};
-
-export class MizarMapModel extends widgets.DOMWidgetModel {
-  defaults() {
-    return {
-      ...super.defaults(),
-      _view_name: 'MizarMapView',
-      _model_name: 'MizarMapModel',
+      _view_name: 'MizarPlanetView',
+      _model_name: 'MizarPlanetModel',
       _model_module: 'jupyter-mizar',
       _view_module: 'jupyter-mizar',
       center: DEFAULT_LOCATION,
@@ -56,9 +37,6 @@ export class MizarMapModel extends widgets.DOMWidgetModel {
       inertia: true,
       inertia_deceleration: 3000,
       inertia_max_speed: 1500,
-      // inertia_threshold : int(?)
-      // fade_animation : bool(?),
-      // zoom_animation : bool(?),
       zoom_animation_threshold: 4,
       south: DEFAULT_LOCATION[0],
       north: DEFAULT_LOCATION[0],
@@ -75,10 +53,12 @@ export class MizarMapModel extends widgets.DOMWidgetModel {
         name: 'EPSG3857',
         custom: false
       },
-      style: null,
-      default_style: null,
-      dragging_style: null,
-      _dragging: false
+      _dragging: false,
+
+      // For the dummy image
+      src: 'https://lagranderecre-lagranderecre-fr-storage.omn.proximis.com/Imagestorage/imagesSynchro/0/0/ae8adfc9a2047079049f1c0410e37c32f5e882ad_IMG-PRODUCT-828315-2.jpeg',
+      width: 500,
+      height: 500
     };
   }
 
@@ -86,74 +66,15 @@ export class MizarMapModel extends widgets.DOMWidgetModel {
     super.initialize(attributes, options);
     this.set('window_url', window.location.href);
   }
-
-  update_style() {
-    var new_style;
-    if (!this.get('_dragging')) {
-      new_style = this.get('default_style');
-    } else {
-      new_style = this.get('dragging_style');
-    }
-    this.set('style', new_style);
-  }
-
-  update_bounds() {
-    return widgets.resolvePromisesDict(this.views).then(views => {
-      // default bounds if the projection is latlon
-      var bounds = {
-        north: -90,
-        south: 90,
-        east: -180,
-        west: 180
-      };
-      var pixel_bounds = {
-        top: 9007199254740991,
-        bottom: 0,
-        right: 0,
-        left: 9007199254740991
-      };
-      Object.keys(views).reduce(function (bnds_pixbnds, key) {
-        var bnds = bnds_pixbnds[0];
-        var pixbnds = bnds_pixbnds[1];
-        var obj = views[key].obj;
-        if (obj) {
-          var view_bounds = obj.getBounds();
-          bnds.north = Math.max(bnds.north, view_bounds.getNorth());
-          bnds.south = Math.min(bnds.south, view_bounds.getSouth());
-          bnds.east = Math.max(bnds.east, view_bounds.getEast());
-          bnds.west = Math.min(bnds.west, view_bounds.getWest());
-          var view_pixel_bounds = obj.getPixelBounds();
-          var top_left = view_pixel_bounds.getTopLeft();
-          var bottom_right = view_pixel_bounds.getBottomRight();
-          pixbnds.top = Math.min(pixbnds.top, top_left.y);
-          pixbnds.bottom = Math.max(pixbnds.bottom, bottom_right.y);
-          pixbnds.right = Math.max(pixbnds.right, bottom_right.x);
-          pixbnds.left = Math.min(pixbnds.left, top_left.x);
-        }
-        return [bnds, pixbnds];
-      }, [bounds, pixel_bounds]);
-      this.set('north', bounds.north);
-      this.set('south', bounds.south);
-      this.set('east', bounds.east);
-      this.set('west', bounds.west);
-      this.set('top', pixel_bounds.top);
-      this.set('bottom', pixel_bounds.bottom);
-      this.set('right', pixel_bounds.right);
-      this.set('left', pixel_bounds.left);
-    });
-  }
 }
 
-MizarMapModel.serializers = {
+MizarPlanetModel.serializers = {
   ...widgets.DOMWidgetModel.serializers,
   layers: { deserialize: widgets.unpack_models },
   controls: { deserialize: widgets.unpack_models },
-  style: { deserialize: widgets.unpack_models },
-  default_style: { deserialize: widgets.unpack_models },
-  dragging_style: { deserialize: widgets.unpack_models }
 };
 
-export class MizarMapView extends utils.MizarDOMWidgetView {
+export class MizarPlanetView extends utils.MizarDOMWidgetView {
   initialize(options) {
     super.initialize(options);
     // The dirty flag is used to prevent sub-pixel center changes
@@ -205,22 +126,42 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     super.render();
     this.el.classList.add('jupyter-widgets');
     this.el.classList.add('mizar-widgets');
-    this.map_container = document.createElement('div');
-    this.el.appendChild(this.map_container);
-    if (this.get_options().interpolation == 'nearest') {
-      this.map_container.classList.add('crisp-image');
-    }
-    this.layer_views = new widgets.ViewList(
-      this.add_layer_model,
-      this.remove_layer_view,
-      this
-    );
-    this.control_views = new widgets.ViewList(
-      this.add_control_model,
-      this.remove_control_view,
-      this
-    );
-    this.displayed.then(this.render_mizar.bind(this));
+    // this.map_container = document.createElement('div');
+
+    // For the dummy image
+    this.img_container = document.createElement('img');
+    this.img_container.src = this.model.get('src');
+    this.img_container.width = this.model.get('width');
+    this.img_container.height = this.model.get('height');
+    this.el.appendChild(this.img_container);
+    // Python -> JavaScript update
+    this.model.on('change:width', this._onWidthChanged, this);
+    this.model.on('change:height', this._onHeightChanged, this);
+
+
+    // this.el.appendChild(this.map_container);
+
+    // this.layer_views = new widgets.ViewList(
+    //   this.add_layer_model,
+    //   this.remove_layer_view,
+    //   this
+    // );
+    // this.control_views = new widgets.ViewList(
+    //   this.add_control_model,
+    //   this.remove_control_view,
+    //   this
+    // );
+    // this.displayed.then(this.render_mizar.bind(this));
+  }
+
+  // For the dummy image
+  _onWidthChanged() {
+    console.log("WOUALOU")
+    console.log(this.model.get('width'))
+    this.img_container.width = this.model.get('width');
+  }
+  _onHeightChanged() {
+    this.img_container.height = this.model.get('height');
   }
 
   render_mizar() {
@@ -229,9 +170,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
       this.control_views.update(this.model.get('controls'));
       this.mizar_events();
       this.model_events();
-      this.model.update_bounds().then(() => {
-        this.touch();
-      });
 
       return this;
     });
@@ -256,16 +194,11 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
         this.model.set('center', [c.lat, c.lng]);
         this.dirty = false;
       }
-      this.model.update_bounds().then(() => {
-        this.touch();
-      });
       this.model.set('_dragging', false);
-      this.model.update_style();
     });
 
     this.obj.on('movestart', () => {
       this.model.set('_dragging', true);
-      this.model.update_style();
     });
 
     this.obj.on('zoomend', e => {
@@ -275,9 +208,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
         this.model.set('zoom', z);
         this.dirty = false;
       }
-      this.model.update_bounds().then(() => {
-        this.touch();
-      });
     });
 
     this.obj.on(
@@ -346,9 +276,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
           });
           this.dirty = false;
         }
-        this.model.update_bounds().then(() => {
-          this.touch();
-        });
       },
       this
     );
@@ -360,36 +287,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
           this.dirty = true;
           this.obj.panTo(this.model.get('center'));
           this.dirty = false;
-        }
-        this.model.update_bounds().then(() => {
-          this.touch();
-        });
-      },
-      this
-    );
-    this.listenTo(
-      this.model,
-      'change:dragging_style',
-      function () {
-        this.model.update_style();
-      },
-      this
-    );
-    this.listenTo(
-      this.model,
-      'change:default_style',
-      function () {
-        this.model.update_style();
-      },
-      this
-    );
-    this.listenTo(
-      this.model,
-      'change:fullscreen',
-      function () {
-        var fullscreen = this.model.get('fullscreen');
-        if (this.obj.isFullscreen() !== fullscreen) {
-          this.obj.toggleFullscreen();
         }
       },
       this

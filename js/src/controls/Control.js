@@ -1,6 +1,6 @@
 
 const widgets = require('@jupyter-widgets/base');
-const L = require('../leaflet.js');
+// const L = require('../leaflet.js');
 const utils = require('../utils.js');
 
 export class MizarControlModel extends widgets.WidgetModel {

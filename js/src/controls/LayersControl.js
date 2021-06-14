@@ -1,5 +1,5 @@
 
-const L = require('../leaflet.js');
+// const L = require('../leaflet.js');
 const control = require('./Control.js');
 
 export class MizarLayersControlModel extends control.MizarControlModel {

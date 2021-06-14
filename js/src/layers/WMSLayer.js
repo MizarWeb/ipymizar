@@ -1,7 +1,7 @@
 
-const L = require('../leaflet.js');
+// const L = require('../leaflet.js');
 const tilelayer = require('./TileLayer.js');
-const proj = require('../projections.js');
+// const proj = require('../projections.js');
 
 export class MizarWMSLayerModel extends tilelayer.MizarTileLayerModel {
   defaults() {

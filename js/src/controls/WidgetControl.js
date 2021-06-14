@@ -1,6 +1,7 @@
 
 const widgets = require('@jupyter-widgets/base');
-const L = require('../leaflet.js');
+// const L = require('../leaflet.js');
+const L = require('leaflet');
 const control = require('./Control.js');
 const PMessaging = require('@lumino/messaging');
 const PWidgets = require('@lumino/widgets');

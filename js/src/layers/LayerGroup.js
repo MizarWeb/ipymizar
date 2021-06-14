@@ -1,6 +1,6 @@
 
 const widgets = require('@jupyter-widgets/base');
-const L = require('../leaflet.js');
+// const L = require('../leaflet.js');
 const layer = require('./Layer.js');
 
 export class MizarLayerGroupModel extends layer.MizarLayerModel {
