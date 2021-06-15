@@ -26,3 +26,7 @@ docs/*.nc
 
 # IDE
 .vscode/
+.history
+
+# Yarn lock
+js/yarn.lock

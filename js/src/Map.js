@@ -1,6 +1,7 @@
 
 const widgets = require('@jupyter-widgets/base');
 // const L = require('./leaflet.js');
+const Mizar = require('regards-mizar').default
 const utils = require('./utils.js');
 // const proj = require('./projections.js');
 
@@ -126,21 +127,26 @@ export class MizarPlanetView extends utils.MizarDOMWidgetView {
     super.render();
     this.el.classList.add('jupyter-widgets');
     this.el.classList.add('mizar-widgets');
-    // this.map_container = document.createElement('div');
-
-    // For the dummy image
-    this.img_container = document.createElement('img');
-    this.img_container.src = this.model.get('src');
-    this.img_container.width = this.model.get('width');
-    this.img_container.height = this.model.get('height');
-    this.el.appendChild(this.img_container);
-    // Python -> JavaScript update
+    this.map_container = document.createElement('canvas');
+    this.map_container.setAttribute("id", 'mizar-' + new Date().getTime());
     this.model.on('change:width', this._onWidthChanged, this);
     this.model.on('change:height', this._onHeightChanged, this);
 
+    this.el.appendChild(this.map_container);
 
-    // this.el.appendChild(this.map_container);
+    let mizarOptions = {
+      // the canvas ID where Mizar is inserted
+      canvas: this.map_container,
+      // define a planet context
+      planetContext: {
+        // the CRS of the Earth
+        coordinateSystem: {
+          geoideName: 'CRS:84',
+        },
+      },
+    }
 
+    new Mizar(mizarOptions)
     // this.layer_views = new widgets.ViewList(
     //   this.add_layer_model,
     //   this.remove_layer_view,
@@ -235,7 +241,7 @@ export class MizarPlanetView extends utils.MizarDOMWidgetView {
       this.listenTo(
         this.model,
         'change:' + key,
-        function() {
+        function () {
           L.setOptions(this.obj, this.get_options());
         },
         this

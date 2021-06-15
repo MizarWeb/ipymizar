@@ -153,16 +153,18 @@ To install use pip:
 
 Dev installation
 ----------------
+Clone the repo:
+
+    $ git clone LINKTOGIT
+    $ cd ipymizar
 
 For a development installation, you can use `conda` to create a dev environment with the required dependencies (including [Node.js](https://nodejs.org) and [Yarn version 1](https://classic.yarnpkg.com/)):
 
     $ conda env create --file dev-environment.yml
     $ conda activate ipymizar-dev
 
-Clone the repo and install a dev version of `ipymizar`:
+Install a dev version of `ipymizar`:
 
-    $ git clone LINKTOGIT
-    $ cd ipymizar
     $ pip install -e .
 
 When developing for the classic Jupyter Notebook (launched with `jupyter notebook`), run:
@@ -182,7 +184,7 @@ This command has to be run whatever the version of JupyterLab (not required for 
 Then you need to rebuild the front-end (Javascript) when you make a code change:
 
     $ cd js
-    $ yarn run build
+    $ yarn build
 
 If you change the code:
 
@@ -195,12 +197,12 @@ To build/rebuild the front-end:
 
 And the following command to build both the notebook and the lab extensions;
 
-    $ yarn run build
+    $ yarn build
 
 Or one of these commands to build one of these extensions in watch mode (automatically rebuilds when a change is detected):
 
-    $ yarn run "watch:nbextension"
+    $ yarn watch:nbextension
 
 or
 
-    $ yarn run "watch:labextension"
+    $ yarn watch:labextension
