@@ -7,17 +7,29 @@ const utils = require('./utils.js');
 
 const DEFAULT_LOCATION = [0.0, 0.0];
 
+// const CRS_TO_CONTEXT = {
+//   Equatorial: "Sky",
+//   Galactic: "Sky",
+//   "CRS:84": "Planet",
+//   "IAU2000:49901": "Planet",
+//   "IAU2000:49900": "Planet",
+//   "IAU2000:30101": "Planet",
+//   "IAU2000:30100": "Planet",
+//   HorizontalLocal: "Ground",
+//   "IAU:Sun": "Planet"
+// };
 
-export class MizarPlanetModel extends widgets.DOMWidgetModel {
+export class MizarMapModel extends widgets.DOMWidgetModel {
   defaults() {
     console.error("defaults", super.defaults())
     return {
       ...super.defaults(),
-      _view_name: 'MizarPlanetView',
-      _model_name: 'MizarPlanetModel',
+      _view_name: 'MizarMapView',
+      _model_name: 'MizarMapModel',
       _model_module: 'jupyter-mizar',
       _view_module: 'jupyter-mizar',
       crs: 'CRS:84',
+      zoom: [0.0, 0.0] // can also be a tuple with three elements, the last one being the distance
       // center: DEFAULT_LOCATION,
       // zoom_start: 12,
       // zoom: 12,
@@ -66,14 +78,14 @@ export class MizarPlanetModel extends widgets.DOMWidgetModel {
   }
 }
 
-MizarPlanetModel.serializers = {
+MizarMapModel.serializers = {
   ...widgets.DOMWidgetModel.serializers,
   layers: { deserialize: widgets.unpack_models },
 };
 
-export class MizarPlanetView extends utils.MizarDOMWidgetView {
+export class MizarMapView extends utils.MizarDOMWidgetView {
   initialize(options) {
-    console.error("PlanetView init", options)
+    console.error("MizarMapView init", options)
     super.initialize(options);
     // The dirty flag is used to prevent sub-pixel center changes
     // computed by leaflet to be applied to the model.
@@ -134,8 +146,8 @@ export class MizarPlanetView extends utils.MizarDOMWidgetView {
     this.map_container.addEventListener("mousewheel", function(event) {
       event.preventDefault();
     }, { passive: false });
-    this.model.on('change:width', this._onWidthChanged, this);
-    this.model.on('change:height', this._onHeightChanged, this);
+    // this.model.on('change:width', this._onWidthChanged, this);
+    // this.model.on('change:height', this._onHeightChanged, this);
 
     this.el.appendChild(this.map_container);
 
@@ -152,20 +164,20 @@ export class MizarPlanetView extends utils.MizarDOMWidgetView {
     this.displayed.then(this.render_mizar.bind(this));
   }
 
-  _onWidthChanged() {
-    console.log("_onWidthChanged")
-    console.log(this.model.get('width'))
-    this.map_container.width = this.model.get('width');
-  }
-  _onHeightChanged() {
-    console.log("_onHeightChanged")
-    this.map_container.height = this.model.get('height');
-  }
+  // _onWidthChanged() {
+  //   console.log("_onWidthChanged")
+  //   console.log(this.model.get('width'))
+  //   this.map_container.width = this.model.get('width');
+  // }
+  // _onHeightChanged() {
+  //   console.log("_onHeightChanged")
+  //   this.map_container.height = this.model.get('height');
+  // }
 
   render_mizar() {
     console.log("render_mizar")
     this.create_obj().then(() => {
-      
+
       this.layer_views.update(this.model.get('layers'));
       this.mizar_events();
       this.model_events();
@@ -177,40 +189,49 @@ export class MizarPlanetView extends utils.MizarDOMWidgetView {
   create_obj() {
     console.log("create_obj")
     return this.layoutPromise.then(() => {
-      let mizarOptions = {
+      var mizarOptions = {
         // the canvas ID where Mizar is inserted
-        canvas: this.map_container,
-        // define a planet context
-        planetContext: {
-          // the CRS of the Earth
-          coordinateSystem: {
-            geoideName: 'CRS:84', 
-            // projectionName: Mizar.PROJECTION.Plate, 
-            // geoideName: this.model.get("crs"),
-          },
-          navigation: {
-            initTarget: [1.45294189453125, 43.597300467515375, 50000]
-          }
+        canvas: this.map_container
+      };
+      var crs = this.model.get('crs');
+      console.error(crs);
+      var context = {
+        coordinateSystem: {
+          geoideName: crs
         },
+        navigation: {
+          initTarget: this.model.get('init_target')
+        }
+      };
+      switch (Mizar.CRS_TO_CONTEXT[crs]) {
+        case 'Planet':
+          mizarOptions.planetContext = context;
+          break;
+        case 'Sky':
+          mizarOptions.skyContext = context;
+          break;
+        default:
+          console.error(`Hay un problema con el context`);
       }
       var options = {
         ...this.get_options(),
       };
       console.log("options would be", options)
+      console.error(mizarOptions)
       this.obj = new Mizar(mizarOptions)
-      this.obj.addLayer({
-        type: "OSM",
-        baseUrl: "https://c.tile.openstreetmap.org",
-        background: true
-      })
-      this.obj.addLayer({
-        layers: "BioNonBio",
-        baseUrl: "http://opf-proto.cst.cnes.fr/mapserver/",
-        type: "WMS",
-        time: '2017-01-01T00:00:00.000Z',
-        // visible: true,
-        background: false
-      })
+      // this.obj.addLayer({
+      //   type: "OSM",
+      //   baseUrl: "https://c.tile.openstreetmap.org",
+      //   background: true
+      // })
+      // this.obj.addLayer({
+      //   layers: "BioNonBio",
+      //   baseUrl: "http://opf-proto.cst.cnes.fr/mapserver/",
+      //   type: "WMS",
+      //   time: '2017-01-01T00:00:00.000Z',
+      //   // visible: true,
+      //   background: false
+      // })
       console.error("this.obj", this.obj)
     });
   }
@@ -294,21 +315,50 @@ export class MizarPlanetView extends utils.MizarDOMWidgetView {
         if (!this.dirty) {
           this.dirty = true;
           console.log("change:zoom")
-          // Using flyTo instead of setZoom to adjust for potential
-          // sub-pixel error in leaflet object's center.
-          //
-          // Disabling animation on updates from the model because
-          // animation triggers a `moveend` event in an animationFrame,
-          // which causes the center to bounce despite of the dirty flag
-          // which is set back to false synchronously.
-          this.obj.flyTo(this.model.get('center'), this.model.get('zoom'), {
-            animate: false
-          });
+          // get the navigation object
+          var nav = this.obj.getActivatedContext().getNavigation();
+
+          var zoom = this.model.get('zoom')
+          var options = {};
+          switch (zoom.length) {
+            case 2:
+              var geoPos = zoom
+              break;
+            case 3:
+              var geoPos = zoom.slice(0, 2);
+              options.distance = zoom.slice(-1)[0];
+              break;
+            default:
+              console.error(`Hay un problema con el zoom`);
+          }
+          nav.zoomTo(geoPos, options);
           this.dirty = false;
         }
       },
       this
     );
+    // this.listenTo(
+    //   this.model,
+    //   'change:zoom',
+    //   function () {
+    //     if (!this.dirty) {
+    //       this.dirty = true;
+    //       console.log("change:zoom")
+    //       // Using flyTo instead of setZoom to adjust for potential
+    //       // sub-pixel error in leaflet object's center.
+    //       //
+    //       // Disabling animation on updates from the model because
+    //       // animation triggers a `moveend` event in an animationFrame,
+    //       // which causes the center to bounce despite of the dirty flag
+    //       // which is set back to false synchronously.
+    //       this.obj.flyTo(this.model.get('center'), this.model.get('zoom'), {
+    //         animate: false
+    //       });
+    //       this.dirty = false;
+    //     }
+    //   },
+    //   this
+    // );
     this.listenTo(
       this.model,
       'change:center',

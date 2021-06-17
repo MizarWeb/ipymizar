@@ -29,19 +29,20 @@ export class MizarRasterLayerView extends layer.MizarLayerView {
       this.model,
       'change:visible',
       function() {
-        if (this.model.get('visible')) {
-          this.obj.setOpacity(this.model.get('opacity'));
-        } else {
-          this.obj.setOpacity(0);
-        }
+        this.obj.setVisible(this.model.get('visible'));
+        // if (this.model.get('visible')) {
+        //   this.obj.setOpacity(this.model.get('opacity'));
+        // } else {
+        //   this.obj.setOpacity(0);
+        // }
       },
       this
     );
 
-    if (this.model.get('visible')) {
-      this.obj.setOpacity(this.model.get('opacity'));
-    } else {
-      this.obj.setOpacity(0);
-    }
+    // if (this.model.get('visible')) {
+    //   this.obj.setOpacity(this.model.get('opacity'));
+    // } else {
+    //   this.obj.setOpacity(0);
+    // }
   }
 }

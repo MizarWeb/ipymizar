@@ -109,7 +109,7 @@ class Layer(Widget, InteractMixin):
 
     name = Unicode('').tag(sync=True)
     base = Bool(False).tag(sync=True)
-    bottom = Bool(False).tag(sync=True)
+    # bottom = Bool(False).tag(sync=True)
 
     options = List(trait=Unicode()).tag(sync=True)
 
@@ -272,20 +272,20 @@ class TileLayer(RasterLayer):
     _view_name = Unicode('MizarTileLayerView').tag(sync=True)
     _model_name = Unicode('MizarTileLayerModel').tag(sync=True)
 
-    bottom = Bool(True).tag(sync=True)
+    # bottom = Bool(True).tag(sync=True)
     url = Unicode('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').tag(sync=True)
-    min_zoom = Int(0).tag(sync=True, o=True)
-    max_zoom = Int(18).tag(sync=True, o=True)
-    min_native_zoom = Int(0).tag(sync=True, o=True)
-    max_native_zoom = Int(18).tag(sync=True, o=True)
-    tile_size = Int(256).tag(sync=True, o=True)
-    attribution = Unicode('Map data (c) <a href="https://openstreetmap.org">OpenStreetMap</a> contributors').tag(
-        sync=True, o=True)
-    detect_retina = Bool(False).tag(sync=True, o=True)
-    no_wrap = Bool(False).tag(sync=True, o=True)
-    tms = Bool(False).tag(sync=True, o=True)
-    show_loading = Bool(False).tag(sync=True)
-    loading = Bool(False, read_only=True).tag(sync=True)
+    # min_zoom = Int(0).tag(sync=True, o=True)
+    # max_zoom = Int(18).tag(sync=True, o=True)
+    # min_native_zoom = Int(0).tag(sync=True, o=True)
+    # max_native_zoom = Int(18).tag(sync=True, o=True)
+    # tile_size = Int(256).tag(sync=True, o=True)
+    # attribution = Unicode('Map data (c) <a href="https://openstreetmap.org">OpenStreetMap</a> contributors').tag(
+    #     sync=True, o=True)
+    # detect_retina = Bool(False).tag(sync=True, o=True)
+    # no_wrap = Bool(False).tag(sync=True, o=True)
+    # tms = Bool(False).tag(sync=True, o=True)
+    # show_loading = Bool(False).tag(sync=True)
+    # loading = Bool(False, read_only=True).tag(sync=True)
 
     _load_callbacks = Instance(CallbackDispatcher, ())
 
@@ -337,11 +337,11 @@ class WMSLayer(TileLayer):
     _model_name = Unicode('MizarWMSLayerModel').tag(sync=True)
 
     # Options
-    layers = Unicode().tag(sync=True, o=True)
-    format = Unicode('image/jpeg').tag(sync=True, o=True)
-    transparent = Bool(False).tag(sync=True, o=True)
-    crs = Dict(default_value=projections.EPSG3857).tag(sync=True)
-    uppercase = Bool(False).tag(sync=True, o=True)
+    # layers = Unicode().tag(sync=True, o=True)
+    # format = Unicode('image/jpeg').tag(sync=True, o=True)
+    # transparent = Bool(False).tag(sync=True, o=True)
+    # crs = Dict(default_value=projections.EPSG3857).tag(sync=True)
+    # uppercase = Bool(False).tag(sync=True, o=True)
 
 
 class VectorLayer(Layer):
@@ -675,7 +675,19 @@ class ZoomControl(Control):
     zoom_out_title = Unicode('Zoom out').tag(sync=True, o=True)
 
 
-class Planet(DOMWidget, InteractMixin):
+class CRS:
+    Equatorial = "Equatorial"
+    Galactic = "Galactic"
+    WGS84 = "CRS:84"
+    Mars_2000 = "IAU2000:49901"
+    Mars_2000_old = "IAU2000:49900"
+    Moon_2000 = "IAU2000:30101"
+    Moon_2000_old = "IAU2000:30100"
+    HorizontalLocal = "HorizontalLocal"
+    Sun = "IAU:Sun"
+
+
+class MizarMap(DOMWidget, InteractMixin):
     """Map class.
 
     The Map class is the main widget in ipymizar.
@@ -696,55 +708,63 @@ class Planet(DOMWidget, InteractMixin):
         ‘EPSG4326’, ‘Base’, ‘Simple’ or user defined projection.
     """
 
-    _view_name = Unicode('MizarPlanetView').tag(sync=True)
-    _model_name = Unicode('MizarPlanetModel').tag(sync=True)
+    _view_name = Unicode('MizarMapView').tag(sync=True)
+    _model_name = Unicode('MizarMapModel').tag(sync=True)
     _view_module = Unicode('jupyter-mizar').tag(sync=True)
     _model_module = Unicode('jupyter-mizar').tag(sync=True)
-
     _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
     _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
 
     # URL of the window where the map is displayed
     window_url = Unicode(read_only=True).tag(sync=True)
 
-    # For the dummy image
-    src = Unicode("https://lagranderecre-lagranderecre-fr-storage.omn.proximis.com/Imagestorage/imagesSynchro/0/0/ae8adfc9a2047079049f1c0410e37c32f5e882ad_IMG-PRODUCT-828315-2.jpeg").tag(sync=True)
-    width = Int(500).tag(sync=True)
-    height = Int(500).tag(sync=True)
+    crs = Unicode(CRS.WGS84).tag(sync=True)
+    zoom = Union(
+        (
+            Tuple(CFloat(), CFloat(), CFloat()),
+            Tuple(CFloat(), CFloat()),
+        ),
+        default_value=(0, 0)
+    ).tag(sync=True)
 
-    # Map options
-    zoom_start = CFloat(12).tag(sync=True, o=True)
-    zoom = CFloat(12).tag(sync=True, o=True)
-    max_zoom = CFloat(18).tag(sync=True, o=True)
-    min_zoom = CFloat(1).tag(sync=True, o=True)
-    zoom_delta = CFloat(1).tag(sync=True, o=True)
-    interpolation = Unicode('bilinear').tag(sync=True, o=True)
-    crs = Dict(default_value=projections.EPSG3857).tag(sync=True)
+    # # For the dummy image
+    # src = Unicode("https://lagranderecre-lagranderecre-fr-storage.omn.proximis.com/Imagestorage/imagesSynchro/0/0/ae8adfc9a2047079049f1c0410e37c32f5e882ad_IMG-PRODUCT-828315-2.jpeg").tag(sync=True)
+    # width = Int(500).tag(sync=True)
+    # height = Int(500).tag(sync=True)
 
-    modisdate = Unicode('yesterday').tag(sync=True)
+    # # Map options
+    # zoom_start = CFloat(12).tag(sync=True, o=True)
+    # zoom = CFloat(12).tag(sync=True, o=True)
+    # max_zoom = CFloat(18).tag(sync=True, o=True)
+    # min_zoom = CFloat(1).tag(sync=True, o=True)
+    # zoom_delta = CFloat(1).tag(sync=True, o=True)
+    # interpolation = Unicode('bilinear').tag(sync=True, o=True)
+    # crs = Dict(default_value=projections.EPSG3857).tag(sync=True)
 
-    # Interaction options
-    dragging = Bool(True).tag(sync=True, o=True)
-    touch_zoom = Bool(True).tag(sync=True, o=True)
-    scroll_wheel_zoom = Bool(False).tag(sync=True, o=True)
-    double_click_zoom = Bool(True).tag(sync=True, o=True)
-    box_zoom = Bool(True).tag(sync=True, o=True)
-    tap = Bool(True).tag(sync=True, o=True)
-    tap_tolerance = Int(15).tag(sync=True, o=True)
-    world_copy_jump = Bool(False).tag(sync=True, o=True)
-    bounce_at_zoom_limits = Bool(True).tag(sync=True, o=True)
-    keyboard = Bool(True).tag(sync=True, o=True)
-    keyboard_pan_offset = Int(80).tag(sync=True, o=True)
-    keyboard_zoom_offset = Int(1).tag(sync=True, o=True)
-    inertia = Bool(True).tag(sync=True, o=True)
-    inertia_deceleration = Int(3000).tag(sync=True, o=True)
-    inertia_max_speed = Int(1500).tag(sync=True, o=True)
-    zoom_animation_threshold = Int(4).tag(sync=True, o=True)
-    fullscreen = Bool(False).tag(sync=True, o=True)
+    # modisdate = Unicode('yesterday').tag(sync=True)
+
+    # # Interaction options
+    # dragging = Bool(True).tag(sync=True, o=True)
+    # touch_zoom = Bool(True).tag(sync=True, o=True)
+    # scroll_wheel_zoom = Bool(False).tag(sync=True, o=True)
+    # double_click_zoom = Bool(True).tag(sync=True, o=True)
+    # box_zoom = Bool(True).tag(sync=True, o=True)
+    # tap = Bool(True).tag(sync=True, o=True)
+    # tap_tolerance = Int(15).tag(sync=True, o=True)
+    # world_copy_jump = Bool(False).tag(sync=True, o=True)
+    # bounce_at_zoom_limits = Bool(True).tag(sync=True, o=True)
+    # keyboard = Bool(True).tag(sync=True, o=True)
+    # keyboard_pan_offset = Int(80).tag(sync=True, o=True)
+    # keyboard_zoom_offset = Int(1).tag(sync=True, o=True)
+    # inertia = Bool(True).tag(sync=True, o=True)
+    # inertia_deceleration = Int(3000).tag(sync=True, o=True)
+    # inertia_max_speed = Int(1500).tag(sync=True, o=True)
+    # zoom_animation_threshold = Int(4).tag(sync=True, o=True)
+    # fullscreen = Bool(False).tag(sync=True, o=True)
 
     options = List(trait=Unicode()).tag(sync=True)
 
-    zoom_control = Bool(True)
+    # zoom_control = Bool(True)
 
     layers = Tuple().tag(trait=Instance(Layer), sync=True, **widget_serialization)
 
@@ -753,7 +773,7 @@ class Planet(DOMWidget, InteractMixin):
         return [name for name in self.traits(o=True)]
 
     def __init__(self, **kwargs):
-        super(Planet, self).__init__(**kwargs)
+        super(MizarMap, self).__init__(**kwargs)
         self.on_msg(self._handle_mizar_event)
 
     _layer_ids = List()
@@ -901,8 +921,3 @@ class Planet(DOMWidget, InteractMixin):
 
     def on_interaction(self, callback, remove=False):
         self._interaction_callbacks.register_callback(callback, remove=remove)
-
-    # Navigation handling
-
-    def zoom_to(self, geo_pos):
-        pass
