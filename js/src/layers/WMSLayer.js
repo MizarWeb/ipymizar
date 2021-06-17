@@ -44,6 +44,11 @@ export class MizarWMSLayerView extends tilelayer.MizarTileLayerView {
       this.obj = this.objMap.getLayerByID(layerId)
     })
   }
+  //   this.obj = L.tileLayer.wms(this.model.get('url'), {
+  //     ...this.get_options(),
+  //     crs: proj.getProjection(this.model.get('crs')),
+  //   });
+  // }
 
   model_events() {
     super.model_events();
