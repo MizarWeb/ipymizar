@@ -1,82 +1,54 @@
 
-// const L = require('../leaflet.js');
-const featuregroup = require('./FeatureGroup.js');
+const Mizar = require('regards-mizar').default
+const layer = require('./Layer.js');
 
-export class MizarGeoJSONModel extends featuregroup.MizarFeatureGroupModel {
+export class MizarGeoJSONModel extends layer.MizarLayerModel {
   defaults() {
     return {
       ...super.defaults(),
       _view_name: 'MizarGeoJSONView',
       _model_name: 'MizarGeoJSONModel',
       data: {},
-      style: {},
-      hover_style: {},
-      point_style: {}
+      // style: {},
+      strokeColor: '',
+      strokeWidth: '',
     };
   }
 }
 
-export class MizarGeoJSONView extends featuregroup.MizarFeatureGroupView {
+export class MizarGeoJSONView extends layer.MizarLayerView {
   create_obj() {
-    var style = feature => {
-      const model_style = this.model.get('style');
-      const feature_style = feature.properties.style || {};
-      return {
-         ...feature_style,
-         ...model_style
-      };
-    };
-
-    var options = {
-      style: style,
-      onEachFeature: (feature, layer) => {
-        var mouseevent = e => {
-          if (e.type == 'mouseover') {
-            layer.setStyle(this.model.get('hover_style'));
-            layer.once('mouseout', () => {
-              this.obj.resetStyle(layer);
-            });
-          }
-          this.send({
-            event: e.type,
-            feature: feature,
-            properties: feature.properties,
-            id: feature.id
-          });
-        };
-        layer.on({
-          mouseover: mouseevent,
-          click: mouseevent
-        });
+    const mizarMap = this.map_view.obj
+    const basicOptions = this.getBasicConf()
+    mizarMap.addLayer({
+      ...basicOptions,
+      type: Mizar.LAYER.GeoJSON,
+      style: {
+        strokeColor: this.model.get('strokeColor'),
+        strokeWidth: this.model.get('strokeWidth'),
+        // ...this.model.get('style')
       }
-    };
-
-    var point_style = this.model.get('point_style');
-
-    if (Object.keys(point_style).length !== 0) {
-      options.pointToLayer = function(feature, latlng) {
-        return new L.CircleMarker(latlng, point_style);
-      };
-    }
-
-    this.obj = L.geoJson(this.model.get('data'), options);
+    }, (layerId) => {
+      // store layer
+      this.obj = this.objMap.getLayerByID(layerId)
+    })
   }
 
   model_events() {
-    this.listenTo(
-      this.model,
-      'change:style',
-      function() {
-        this.obj.setStyle(this.model.get('style'));
-      },
-      this
-    );
+    // this.listenTo(
+    //   this.model,
+    //   'change:style',
+    //   function () {
+    //     this.obj.setStyle(this.model.get('style'));
+    //   },
+    //   this
+    // );
     this.listenTo(
       this.model,
       'change:data',
-      function() {
-        this.obj.clearLayers();
-        this.obj.addData(this.model.get('data'));
+      function () {
+        this.obj.removeAllFeatures()
+        this.obj.addFeatureCollection(this.model.get('data'))
       },
       this
     );

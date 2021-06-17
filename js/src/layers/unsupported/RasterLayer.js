@@ -1,5 +1,5 @@
 
-const layer = require('./Layer.js');
+const layer = require('../Layer.js');
 
 export class MizarRasterLayerModel extends layer.MizarLayerModel {
   defaults() {
@@ -18,7 +18,7 @@ export class MizarRasterLayerView extends layer.MizarLayerView {
     this.listenTo(
       this.model,
       'change:opacity',
-      function() {
+      function () {
         if (this.model.get('visible')) {
           this.obj.setOpacity(this.model.get('opacity'));
         }
@@ -28,7 +28,7 @@ export class MizarRasterLayerView extends layer.MizarLayerView {
     this.listenTo(
       this.model,
       'change:visible',
-      function() {
+      function () {
         if (this.model.get('visible')) {
           this.obj.setOpacity(this.model.get('opacity'));
         } else {
