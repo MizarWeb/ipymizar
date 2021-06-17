@@ -1,5 +1,5 @@
 
-const layer = require('../Layer.js');
+const layer = require('./Layer.js');
 
 export class MizarRasterLayerModel extends layer.MizarLayerModel {
   defaults() {
