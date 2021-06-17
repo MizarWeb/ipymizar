@@ -2,7 +2,7 @@
  * Distributed under the terms of the Modified BSD License.
  */
 
-.leaflet-container {
+.leaflet-container, .jupyter-widgets.mizar-widgets canvas {
     height: 100%;
     width: 100%;
 }
