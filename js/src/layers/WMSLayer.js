@@ -22,6 +22,7 @@ export class MizarWMSLayerView extends layer.MizarLayerView {
     mizarMap.addLayer({
       ...basicOptions,
       type: Mizar.LAYER.WMS,
+      layers: this.model.get('layers')
     }, (layerId) => {
       // store layer
       this.obj = mizarMap.getLayerByID(layerId)
