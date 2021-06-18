@@ -4,7 +4,13 @@ from ._version import version_info, __version__  # noqa
 # conda-build.
 
 try:
-    from .mizar import *  # noqa
+    from .mizar import (  # noqa
+        CRS,
+        HipsLayer,
+        MizarMap,
+        OSMLayer,
+        WMSLayer,
+    )
     from .basemaps import basemaps   # noqa
 except ImportError:
     pass
