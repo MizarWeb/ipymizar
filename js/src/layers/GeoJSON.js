@@ -23,6 +23,7 @@ export class MizarGeoJSONLayerView extends layer.MizarLayerView {
       ...basicOptions,
       type: Mizar.LAYER.GeoJSON,
       style: this.model.get('style'),
+    }
     const url = this.model.get('url')
     if (url) {
       options.url = url
