@@ -168,16 +168,13 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
       this.model,
       'change:zoom',
       function () {
-        if (!this.dirty) {
-          console.log("change:zoom")
-          var nav = this.obj.getActivatedContext().getNavigation();
-          var zoom = this.model.get('zoom')
-          var geoPos = [zoom[0], zoom[1]]
-          var options = zoom[2] ? {
-            distance: zoom[2]
-          } : undefined
-          nav.zoomTo(geoPos, options);
-        }
+        var nav = this.obj.getActivatedContext().getNavigation();
+        var zoom = this.model.get('zoom')
+        var geoPos = [zoom[0], zoom[1]]
+        var options = zoom[2] ? {
+          distance: zoom[2]
+        } : undefined
+        nav.zoomTo(geoPos, options);
       },
       this
     );
