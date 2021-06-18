@@ -1,7 +1,4 @@
-
-// const L = require('../leaflet.js');
 const layer = require('./Layer.js');
-// const proj = require('../projections.js');
 const Mizar = require('regards-mizar').default
 
 export class MizarWMSLayerModel extends layer.MizarLayerModel {
@@ -55,15 +52,5 @@ export class MizarWMSLayerView extends layer.MizarLayerView {
       // store layer
       this.obj = mizarMap.getLayerByID(layerId)
     })
-  }
-  //   this.obj = L.tileLayer.wms(this.model.get('url'), {
-  //     ...this.get_options(),
-  //     crs: proj.getProjection(this.model.get('crs')),
-  //   });
-  // }
-
-  model_events() {
-    super.model_events();
-
   }
 }
