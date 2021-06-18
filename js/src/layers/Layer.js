@@ -38,24 +38,11 @@ export class MizarUILayerModel extends MizarLayerModel {
     return {
       ...super.defaults(),
       _view_name: 'MizarUILayerView',
-      _model_name: 'MizarUILayerModel'
+      _model_name: 'MizarUILayerModel',
+      crs: '',
+      opacity: 1,
+      background: false,
     };
-  }
-  /**
-   * Return the configuration related to any Mizar layer
-   */
-  getBasicConf() {
-    const conf = {}
-    if (this.model.get('crs')) {
-      conf.crs = this.model.get('crs')
-    }
-    if (this.model.get('opacity')) {
-      conf.crs = this.model.get('opacity')
-    }
-    if (this.model.get('background')) {
-      conf.crs = this.model.get('background')
-    }
-    return conf
   }
 }
 
@@ -75,6 +62,23 @@ export class MizarLayerView extends utils.MizarWidgetView {
       //   this.bind_popup(value);
       // });
     });
+  }
+
+  /**
+   * Return the configuration related to any Mizar layer
+   */
+  getBasicConf() {
+    const conf = {}
+    if (this.model.get('crs')) {
+      conf.crs = this.model.get('crs')
+    }
+    if (this.model.get('opacity')) {
+      conf.opacity = this.model.get('opacity')
+    }
+    if (this.model.get('background')) {
+      conf.background = this.model.get('background')
+    }
+    return conf
   }
 
   mizar_events() {
@@ -116,7 +120,7 @@ export class MizarLayerView extends utils.MizarWidgetView {
       this.listenTo(
         this.model,
         'change:' + key,
-        function() {
+        function () {
           L.setOptions(this.obj, this.get_options());
         },
         this

@@ -1,5 +1,5 @@
 
-const layer = require('./Layer.js');
+const layer = require('../Layer.js');
 
 export class MizarVectorLayerModel extends layer.MizarLayerModel {
   defaults() {
@@ -11,4 +11,4 @@ export class MizarVectorLayerModel extends layer.MizarLayerModel {
   }
 }
 
-export class MizarVectorLayerView extends layer.MizarLayerView {}
+export class MizarVectorLayerView extends layer.MizarLayerView { }

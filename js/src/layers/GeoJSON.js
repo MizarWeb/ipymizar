@@ -30,7 +30,7 @@ export class MizarGeoJSONView extends layer.MizarLayerView {
       }
     }, (layerId) => {
       // store layer
-      this.obj = this.objMap.getLayerByID(layerId)
+      this.obj = mizarMap.getLayerByID(layerId)
     })
   }
 

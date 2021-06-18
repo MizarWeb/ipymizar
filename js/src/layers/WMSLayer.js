@@ -1,10 +1,10 @@
 
 // const L = require('../leaflet.js');
-const tilelayer = require('./TileLayer.js');
+const layer = require('./Layer.js');
 // const proj = require('../projections.js');
 const Mizar = require('regards-mizar').default
 
-export class MizarWMSLayerModel extends tilelayer.MizarTileLayerModel {
+export class MizarWMSLayerModel extends layer.MizarLayerModel {
   defaults() {
     return {
       ...super.defaults(),
@@ -23,14 +23,13 @@ export class MizarWMSLayerModel extends tilelayer.MizarTileLayerModel {
   }
 }
 
-export class MizarWMSLayerView extends tilelayer.MizarTileLayerView {
+export class MizarWMSLayerView extends layer.MizarLayerView {
   create_obj() {
     const mizarMap = this.map_view.obj
     const basicOptions = this.getBasicConf()
-
-    mizarMap.addLayer({
+    console.log("ADDING WMS", mizarMap, {
       ...basicOptions,
-      type: Mizar.LAYER.WMS,
+      type: Mizar.LAYER.OSM,
       url: this.model.get('url'),
       layers: this.model.get('layers'),
       transparent: this.model.get('transparent'),
@@ -39,9 +38,22 @@ export class MizarWMSLayerView extends tilelayer.MizarTileLayerView {
       numberOfLevels: this.model.get('numberOfLevels'),
       time: this.model.get('time'),
       format: this.model.get('format'),
+    })
+    mizarMap.addLayer({
+      ...basicOptions,
+      type: Mizar.LAYER.OSM,
+      baseUrl: this.model.get('url'),
+      background: true,
+      // layers: this.model.get('layers'),
+      // transparent: this.model.get('transparent'),
+      // restrictTo: this.model.get('restrictTo'),
+      // tilePixelSize: this.model.get('tilePixelSize'),
+      // numberOfLevels: this.model.get('numberOfLevels'),
+      // time: this.model.get('time'),
+      // format: this.model.get('format'),
     }, (layerId) => {
       // store layer
-      this.obj = this.objMap.getLayerByID(layerId)
+      this.obj = mizarMap.getLayerByID(layerId)
     })
   }
   //   this.obj = L.tileLayer.wms(this.model.get('url'), {

@@ -5,20 +5,6 @@ const Mizar = require('regards-mizar').default
 const utils = require('./utils.js');
 // const proj = require('./projections.js');
 
-// const DEFAULT_LOCATION = [0.0, 0.0];
-
-// const CRS_TO_CONTEXT = {
-//   Equatorial: "Sky",
-//   Galactic: "Sky",
-//   "CRS:84": "Planet",
-//   "IAU2000:49901": "Planet",
-//   "IAU2000:49900": "Planet",
-//   "IAU2000:30101": "Planet",
-//   "IAU2000:30100": "Planet",
-//   HorizontalLocal: "Ground",
-//   "IAU:Sun": "Planet"
-// };
-
 export class MizarMapModel extends widgets.DOMWidgetModel {
   defaults() {
     console.error("defaults", super.defaults())
@@ -29,45 +15,8 @@ export class MizarMapModel extends widgets.DOMWidgetModel {
       _model_module: 'jupyter-mizar',
       _view_module: 'jupyter-mizar',
       crs: 'CRS:84',
-      zoom: [0.0, 0.0] // can also be a tuple with three elements, the last one being the distance
-      // center: DEFAULT_LOCATION,
-      // zoom_start: 12,
-      // zoom: 12,
-      // max_zoom: 18,
-      // min_zoom: 1,
-      // dragging: true,
-      // touch_zoom: true,
-      // zoom_delta: 1,
-      // zoom_snap: 1,
-      // scroll_wheel_zoom: false,
-      // double_click_zoom: true,
-      // box_zoom: true,
-      // tap: true,
-      // tap_tolerance: 15,
-      // world_copy_jump: false,
-      // bounce_at_zoom_limits: true,
-      // keyboard: true,
-      // keyboard_pan_offset: 80,
-      // keyboard_zoom_offset: 1,
-      // inertia: true,
-      // inertia_deceleration: 3000,
-      // inertia_max_speed: 1500,
-      // zoom_animation_threshold: 4,
-      // south: DEFAULT_LOCATION[0],
-      // north: DEFAULT_LOCATION[0],
-      // east: DEFAULT_LOCATION[1],
-      // west: DEFAULT_LOCATION[1],
-      // bottom: 0,
-      // top: 9007199254740991,
-      // right: 0,
-      // left: 9007199254740991,
-      // options: [],
-      // layers: [],
-      // crs: {
-      //   name: 'EPSG3857',
-      //   custom: false
-      // },
-      // _dragging: false,
+      zoom: [0.0, 0.0], // can also be a tuple with three elements, the last one being the distance
+      layers: [],
     };
   }
 
@@ -220,71 +169,18 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
       'change:zoom',
       function () {
         if (!this.dirty) {
-          this.dirty = true;
           console.log("change:zoom")
-          // get the navigation object
           var nav = this.obj.getActivatedContext().getNavigation();
-
           var zoom = this.model.get('zoom')
-          var options = {};
-          switch (zoom.length) {
-            case 2:
-              var geoPos = zoom
-              break;
-            case 3:
-              var geoPos = zoom.slice(0, 2);
-              options.distance = zoom.slice(-1)[0];
-              break;
-            default:
-              console.error(`Hay un problema con el zoom`);
-          }
+          var geoPos = [zoom[0], zoom[1]]
+          var options = zoom[2] ? {
+            distance: zoom[2]
+          } : undefined
           nav.zoomTo(geoPos, options);
-          this.dirty = false;
         }
       },
       this
     );
-    // this.listenTo(
-    //   this.model,
-    //   'change:zoom',
-    //   function () {
-    //     if (!this.dirty) {
-    //       this.dirty = true;
-    //       console.log("change:zoom")
-    //       // Using flyTo instead of setZoom to adjust for potential
-    //       // sub-pixel error in leaflet object's center.
-    //       //
-    //       // Disabling animation on updates from the model because
-    //       // animation triggers a `moveend` event in an animationFrame,
-    //       // which causes the center to bounce despite of the dirty flag
-    //       // which is set back to false synchronously.
-    //       this.obj.flyTo(this.model.get('center'), this.model.get('zoom'), {
-    //         animate: false
-    //       });
-    //       this.dirty = false;
-    //     }
-    //   },
-    //   this
-    // );
-    this.listenTo(
-      this.model,
-      'change:center',
-      function () {
-        if (!this.dirty) {
-          this.dirty = true;
-          this.obj.panTo(this.model.get('center'));
-          this.dirty = false;
-        }
-      },
-      this
-    );
-  }
-
-  handle_msg(content) {
-    switch (content.method) {
-      case 'foo':
-        break;
-    }
   }
 
   processLuminoMessage(msg) {

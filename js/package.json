@@ -26,7 +26,7 @@
     "prepublish": "npm run clean && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src",
-    "lint:fix": "eslint --cache --fix src"
+    "lint:fix": "eslint --fix src"
   },
   "dependencies": {
     "@jupyter-widgets/base": "^2 || ^3 || ^4.0.0",
