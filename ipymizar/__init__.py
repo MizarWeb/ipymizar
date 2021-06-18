@@ -6,12 +6,12 @@ from ._version import version_info, __version__  # noqa
 try:
     from .mizar import (  # noqa
         CRS,
+        GeoJSONLayer,
         HipsLayer,
         MizarMap,
         OSMLayer,
         WMSLayer,
     )
-    from .basemaps import basemaps   # noqa
 except ImportError:
     pass
 
