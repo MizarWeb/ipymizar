@@ -60,13 +60,13 @@ export class MizarLayerView extends utils.MizarWidgetView {
       conf.background = this.model.get('background')
     }
     if (this.model.get('visible')) {
-      conf.background = this.model.get('visible')
+      conf.visible = this.model.get('visible')
     }
     if (this.model.get('attribution')) {
-      conf.background = this.model.get('attribution')
+      conf.attribution = this.model.get('attribution')
     }
     if (this.model.get('copyright_url')) {
-      conf.background = this.model.get('copyright_url')
+      conf.copyright_url = this.model.get('copyright_url')
     }
     if (this.model.get('url')) {
       conf.baseUrl = this.model.get('url')
