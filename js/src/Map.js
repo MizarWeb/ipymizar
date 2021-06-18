@@ -15,8 +15,9 @@ export class MizarMapModel extends widgets.DOMWidgetModel {
       _model_module: 'jupyter-mizar',
       _view_module: 'jupyter-mizar',
       crs: 'CRS:84',
-      zoom: [0.0, 0.0], // can also be a tuple with three elements, the last one being the distance
       layers: [],
+      _geo_pos: [0.0, 0.0],
+      _zoom_to_opts: {}
     };
   }
 
@@ -155,6 +156,18 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
   }
 
   model_events() {
+    this.listenTo(
+      this.model,
+      'change:_geo_pos change:_zoom_to_opts',
+      function () {
+        console.error("ZOOM ZOOM ZEN")
+        var nav = this.obj.getActivatedContext().getNavigation();
+        var geoPos = this.model.get('_geo_pos')
+        var options = this.model.get('_zoom_to_opts')
+        nav.zoomTo(geoPos, options);
+      },
+      this
+    );
     this.listenTo(
       this.model,
       'change:layers',
