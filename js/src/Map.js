@@ -7,7 +7,6 @@ const utils = require('./utils.js');
 
 export class MizarMapModel extends widgets.DOMWidgetModel {
   defaults() {
-    console.error("defaults", super.defaults())
     return {
       ...super.defaults(),
       _view_name: 'MizarMapView',
@@ -22,7 +21,6 @@ export class MizarMapModel extends widgets.DOMWidgetModel {
   }
 
   initialize(attributes, options) {
-    console.error("initialize", attributes, options)
     super.initialize(attributes, options);
     this.set('window_url', window.location.href);
   }
@@ -35,28 +33,18 @@ MizarMapModel.serializers = {
 
 export class MizarMapView extends utils.MizarDOMWidgetView {
   initialize(options) {
-    console.error("MizarMapView init", options)
     super.initialize(options);
   }
 
   remove_layer_view(child_view) {
-    console.error("remove_layer_view")
     this.obj.removeLayer(child_view.obj);
     child_view.remove();
   }
 
   add_layer_model(child_model) {
-    console.error("add_layer_model")
     return this.create_child_view(child_model, {
       map_view: this
     }).then(view => {
-      this.obj.addLayer(view.obj);
-
-      // Trigger the displayed event of the child view.
-      this.displayed.then(() => {
-        view.trigger('displayed', this);
-      });
-
       return view;
     });
   }
@@ -71,8 +59,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     this.map_container.addEventListener("mousewheel", function (event) {
       event.preventDefault();
     }, { passive: false });
-    // this.model.on('change:width', this._onWidthChanged, this);
-    // this.model.on('change:height', this._onHeightChanged, this);
 
     this.el.appendChild(this.map_container);
 
@@ -83,16 +69,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     );
     this.displayed.then(this.render_mizar.bind(this));
   }
-
-  // _onWidthChanged() {
-  //   console.log("_onWidthChanged")
-  //   console.log(this.model.get('width'))
-  //   this.map_container.width = this.model.get('width');
-  // }
-  // _onHeightChanged() {
-  //   console.log("_onHeightChanged")
-  //   this.map_container.height = this.model.get('height');
-  // }
 
   render_mizar() {
     console.log("render_mizar")
@@ -106,14 +82,12 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
   }
 
   create_obj() {
-    console.log("create_obj")
     return this.layoutPromise.then(() => {
       var mizarOptions = {
         // the canvas ID where Mizar is inserted
         canvas: this.map_container
       };
       var crs = this.model.get('crs');
-      console.error(crs);
       var context = {
         coordinateSystem: {
           geoideName: crs
@@ -132,11 +106,7 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
         default:
           console.error(`Hay un problema con el context`);
       }
-      var options = {
-        ...this.get_options(),
-      };
-      console.log("options would be", options)
-      console.error(mizarOptions)
+      console.error("Mizar constructor options: ", mizarOptions)
       this.obj = new Mizar(mizarOptions)
       // this.obj.addLayer({
       //   type: "OSM",

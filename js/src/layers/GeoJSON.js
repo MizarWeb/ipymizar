@@ -2,7 +2,7 @@
 const Mizar = require('regards-mizar').default
 const layer = require('./Layer.js');
 
-export class MizarGeoJSONModel extends layer.MizarLayerModel {
+export class MizarGeoJSONLayerModel extends layer.MizarLayerModel {
   defaults() {
     return {
       ...super.defaults(),
@@ -16,19 +16,26 @@ export class MizarGeoJSONModel extends layer.MizarLayerModel {
   }
 }
 
-export class MizarGeoJSONView extends layer.MizarLayerView {
+export class MizarGeoJSONLayerView extends layer.MizarLayerView {
   create_obj() {
     const mizarMap = this.map_view.obj
     const basicOptions = this.getBasicConf()
-    mizarMap.addLayer({
+    const options = {
       ...basicOptions,
       type: Mizar.LAYER.GeoJSON,
       style: this.model.get('style')
-    }, (layerId) => {
+    }
+    console.log("GEOSJON LAHYER conf", options)
+    mizarMap.addLayer(options, (layerId) => {
       // store layer
       this.obj = mizarMap.getLayerByID(layerId)
-      this.obj.addFeatureCollection(this.model.get('data'))
+      this.addFeatures()
     })
+  }
+
+  addFeatures() {
+    const data = this.model.get('data')
+    this.obj.addFeatureCollection(data)
   }
 
   model_events() {
@@ -45,7 +52,7 @@ export class MizarGeoJSONView extends layer.MizarLayerView {
       'change:data',
       function () {
         this.obj.removeAllFeatures()
-        this.obj.addFeatureCollection(this.model.get('data'))
+        this.addFeatures()
       },
       this
     );

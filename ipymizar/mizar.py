@@ -98,7 +98,7 @@ class GeoJSONLayer(Widget):
     name = Unicode().tag(sync=True)
     attribution = Unicode().tag(sync=True)
     copyright_url = Unicode().tag(sync=True)
-    background = Bool(True).tag(sync=True)
+    background = Bool(False).tag(sync=True)
     visible = Bool(True).tag(sync=True)
     opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
     style = Dict().tag(sync=True)
