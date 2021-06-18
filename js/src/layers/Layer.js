@@ -17,7 +17,11 @@ export class MizarLayerModel extends widgets.WidgetModel {
       crs: '',
       opacity: 1.0,
       name: '',
-      base: false,
+      background: true,
+      visible: true,
+      attribution: '',
+      copyright_url: '',
+      url: '',
     };
   }
 }
@@ -54,6 +58,18 @@ export class MizarLayerView extends utils.MizarWidgetView {
     }
     if (this.model.get('background')) {
       conf.background = this.model.get('background')
+    }
+    if (this.model.get('visible')) {
+      conf.background = this.model.get('visible')
+    }
+    if (this.model.get('attribution')) {
+      conf.background = this.model.get('attribution')
+    }
+    if (this.model.get('copyright_url')) {
+      conf.background = this.model.get('copyright_url')
+    }
+    if (this.model.get('url')) {
+      conf.baseUrl = this.model.get('url')
     }
     return conf
   }

@@ -188,7 +188,7 @@ Then you need to rebuild the front-end (Javascript) when you make a code change:
 
 If you change the code:
 
-* In Python: the kernel needs to be restarted
+* In Python: the kernel needs to be restarted using the Kernel menu item available on the Web UI
 * In Javascript: rebuild and refresh the notebook page
 
 To build/rebuild the front-end:

@@ -6,12 +6,12 @@ export class MizarGeoJSONModel extends layer.MizarLayerModel {
   defaults() {
     return {
       ...super.defaults(),
-      _view_name: 'MizarGeoJSONView',
-      _model_name: 'MizarGeoJSONModel',
+      _view_name: 'MizarGeoJSONLayerView',
+      _model_name: 'MizarGeoJSONLayerModel',
       data: {},
-      // style: {},
-      strokeColor: '',
-      strokeWidth: '',
+      style: {},
+      // strokeColor: '',
+      // strokeWidth: '',
     };
   }
 }
@@ -23,14 +23,11 @@ export class MizarGeoJSONView extends layer.MizarLayerView {
     mizarMap.addLayer({
       ...basicOptions,
       type: Mizar.LAYER.GeoJSON,
-      style: {
-        strokeColor: this.model.get('strokeColor'),
-        strokeWidth: this.model.get('strokeWidth'),
-        // ...this.model.get('style')
-      }
+      style: this.model.get('style')
     }, (layerId) => {
       // store layer
       this.obj = mizarMap.getLayerByID(layerId)
+      this.obj.addFeatureCollection(this.model.get('data'))
     })
   }
 
