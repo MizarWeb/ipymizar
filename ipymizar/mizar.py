@@ -1,10 +1,12 @@
+import copy
+
 from ipywidgets import (
     Widget, DOMWidget, CallbackDispatcher, widget_serialization,
 )
 
 from traitlets import (
     CFloat, Float, Unicode, Tuple, List, Instance, Bool, Dict,
-    default, validate, TraitError, Union
+    default, observe, validate, TraitError, Union
 )
 
 from ._version import EXTENSION_VERSION
@@ -103,6 +105,12 @@ class GeoJSONLayer(Widget):
 
     # Some specific properties of this layer
     url = Unicode().tag(sync=True)
+    data = Dict().tag(sync=True)
+
+    @observe("data")
+    def _update_data(self, change):
+        # We need to make a deep copy for ipywidgets to see the change
+        self.data = copy.deepcopy(self.data)
 
 
 class CRS:
