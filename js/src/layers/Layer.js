@@ -73,6 +73,16 @@ export class MizarLayerView extends utils.MizarWidgetView {
   }
 
   model_events() {
+    this.listenTo(
+      this.model,
+      'change:opacity',
+      function() {
+        console.error("OPACITY CHANGE")
+        console.log("this.obj", this.obj)
+        this.obj.setOpacity(this.model.get('opacity'));
+      },
+      this
+    );
   }
 }
 
