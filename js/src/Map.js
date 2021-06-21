@@ -41,6 +41,15 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     child_view.remove();
   }
 
+  remove_layer_view(child_view) {
+    let layerID = child_view.obj.getID();
+    const result = this.obj.removeLayer(layerID);
+    console.log("What is that child_view?", child_view, "childview.obj", child_view.obj, "this.obj", this.obj, "result", result);
+    // new layerID = this.obj.getLayerByID()
+    // this.obj.removeLayer(child_view.obj);
+    child_view.remove();
+  }
+
   add_layer_model(child_model) {
     return this.create_child_view(child_model, {
       map_view: this
