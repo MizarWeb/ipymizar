@@ -11,7 +11,6 @@ export class MizarWMTSLayerModel extends layer.MizarLayerModel {
       layers: '',
       format: "image/jpeg",
       transparent: false,
-      time: '',
     };
   }
 }

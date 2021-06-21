@@ -43,6 +43,7 @@ export class MizarGeoJSONLayerView extends layer.MizarLayerView {
   }
 
   model_events() {
+    super.model_events()
     this.listenTo(
       this.model,
       'change:style',

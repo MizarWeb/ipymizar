@@ -36,17 +36,9 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     super.initialize(options);
   }
 
-  // remove_layer_view(child_view) {
-  //   this.obj.removeLayer(child_view.obj);
-  //   child_view.remove();
-  // }
-
   remove_layer_view(child_view) {
     let layerID = child_view.obj.getID();
     const result = this.obj.removeLayer(layerID);
-    console.log("What is that child_view?", child_view, "childview.obj", child_view.obj, "this.obj", this.obj, "result", result);
-    // new layerID = this.obj.getLayerByID()
-    // this.obj.removeLayer(child_view.obj);
     child_view.remove();
     this.obj.getActivatedContext().refresh();
   }
@@ -60,7 +52,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
   }
 
   render() {
-    console.error("render")
     super.render();
     this.el.classList.add('jupyter-widgets');
     this.el.classList.add('mizar-widgets');
@@ -85,9 +76,7 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
   }
 
   render_mizar() {
-    console.log("render_mizar")
     this.create_obj().then(() => {
-
       this.layer_views.update(this.model.get('layers'));
       this.model_events();
       // Fix pixel not squared
@@ -121,22 +110,7 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
         default:
           console.error(`Hay un problema con el context`);
       }
-      console.error("Mizar constructor options: ", mizarOptions)
       this.obj = new Mizar(mizarOptions)
-      // this.obj.addLayer({
-      //   type: "OSM",
-      //   baseUrl: "https://c.tile.openstreetmap.org",
-      //   background: true
-      // })
-      // this.obj.addLayer({
-      //   layers: "BioNonBio",
-      //   baseUrl: "http://opf-proto.cst.cnes.fr/mapserver/",
-      //   type: "WMS",
-      //   time: '2017-01-01T00:00:00.000Z',
-      //   // visible: true,
-      //   background: false
-      // })
-      console.error("this.obj", this.obj)
     });
   }
 
@@ -145,7 +119,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
       this.model,
       'change:_geo_pos change:_zoom_to_opts',
       function () {
-        console.error("ZOOM ZOOM ZEN")
         var nav = this.obj.getActivatedContext().getNavigation();
         var geoPos = this.model.get('_geo_pos')
         var options = this.model.get('_zoom_to_opts')
@@ -157,7 +130,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
       this.model,
       'change:layers',
       function () {
-        console.log("change:layers")
         this.layer_views.update(this.model.get('layers'));
       },
       this
