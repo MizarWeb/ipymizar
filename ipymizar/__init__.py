@@ -11,6 +11,7 @@ try:
         MizarMap,
         OSMLayer,
         WMSLayer,
+        WMTSLayer,
     )
 except ImportError:
     pass

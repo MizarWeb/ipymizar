@@ -5,7 +5,7 @@ from ipywidgets import (
 )
 
 from traitlets import (
-    CFloat, Float, Unicode, Tuple, List, Instance, Bool, Dict,
+    CFloat, Float, Int, Unicode, Tuple, List, Instance, Bool, Dict,
     default, observe, validate, TraitError, Union
 )
 
@@ -58,6 +58,31 @@ class WMSLayer(Widget):
     # Some specific properties of this layer
     url = Unicode('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').tag(sync=True)
     layers = Unicode(doc="Layers to display on map. Value is a comma-separated list of layer names.").tag(sync=True)
+    format = Unicode('image/jpeg', doc="Format for the map output").tag(sync=True)
+    transparent = Bool(False, doc="Whether the map background should be transparent. Default is false").tag(sync=True)
+    time = Unicode().tag(sync=True)
+
+
+class WMTSLayer(Widget):
+    _view_name = Unicode('MizarWMTSLayerView').tag(sync=True)
+    _model_name = Unicode('MizarWMTSLayerModel').tag(sync=True)
+    _view_module = Unicode('jupyter-mizar').tag(sync=True)
+    _model_module = Unicode('jupyter-mizar').tag(sync=True)
+    _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
+    _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
+
+    # Some properties extracted from 'AbstractLayer configuration'
+    # Should be the same for each layer.
+    name = Unicode().tag(sync=True)
+    attribution = Unicode().tag(sync=True)
+    copyright_url = Unicode().tag(sync=True)
+    background = Bool(True).tag(sync=True)
+    visible = Bool(True).tag(sync=True)
+    opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode().tag(sync=True)
+    layers = Unicode().tag(sync=True)
     format = Unicode('image/jpeg', doc="Format for the map output").tag(sync=True)
     transparent = Bool(False, doc="Whether the map background should be transparent. Default is false").tag(sync=True)
     time = Unicode().tag(sync=True)
