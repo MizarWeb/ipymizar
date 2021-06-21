@@ -60,6 +60,7 @@ class WMSLayer(Widget):
     layers = Unicode(doc="Layers to display on map. Value is a comma-separated list of layer names.").tag(sync=True)
     format = Unicode('image/jpeg', doc="Format for the map output").tag(sync=True)
     transparent = Bool(False, doc="Whether the map background should be transparent. Default is false").tag(sync=True)
+    time = Unicode().tag(sync=True)
 
 
 class HipsLayer(Widget):
