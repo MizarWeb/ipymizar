@@ -50,25 +50,23 @@ export class MizarLayerView extends utils.MizarWidgetView {
    */
   getBasicConf() {
     const conf = {}
-    if (this.model.get('crs')) {
+    if (this.model.has('crs')) {
       conf.crs = this.model.get('crs')
     }
-    if (this.model.get('opacity')) {
-      conf.opacity = this.model.get('opacity')
-    }
-    if (this.model.get('background')) {
+    conf.opacity = this.model.has('opacity') ? this.model.get('opacity') * 100 : 100
+    if (this.model.has('background')) {
       conf.background = this.model.get('background')
     }
-    if (this.model.get('visible')) {
+    if (this.model.has('visible')) {
       conf.visible = this.model.get('visible')
     }
-    if (this.model.get('attribution')) {
+    if (this.model.has('attribution')) {
       conf.attribution = this.model.get('attribution')
     }
-    if (this.model.get('copyright_url')) {
+    if (this.model.has('copyright_url')) {
       conf.copyright_url = this.model.get('copyright_url')
     }
-    if (this.model.get('url')) {
+    if (this.model.has('url')) {
       conf.baseUrl = this.model.get('url')
     }
     return conf

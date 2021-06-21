@@ -59,8 +59,7 @@ class WMSLayer(Widget):
     url = Unicode('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').tag(sync=True)
     layers = Unicode(doc="Layers to display on map. Value is a comma-separated list of layer names.").tag(sync=True)
     format = Unicode('image/jpeg', doc="Format for the map output").tag(sync=True)
-    transparent = Bool(False, doc="Whether the map background should be transparent. Default is false").tag(sync=True)
-    time = Unicode().tag(sync=True)
+    transparent = Bool(False, doc="Whether the layer should be transparent. Default is false").tag(sync=True)
 
 
 class WMTSLayer(Widget):
@@ -85,7 +84,6 @@ class WMTSLayer(Widget):
     layers = Unicode().tag(sync=True)
     format = Unicode('image/jpeg', doc="Format for the map output").tag(sync=True)
     transparent = Bool(False, doc="Whether the map background should be transparent. Default is false").tag(sync=True)
-    time = Unicode().tag(sync=True)
 
 
 class HipsLayer(Widget):
@@ -190,6 +188,7 @@ class MizarMap(DOMWidget):
         ),
         default_value=(0, 0)
     ).tag(sync=True)
+    time = Unicode().tag(sync=True)
 
     options = List(trait=Unicode()).tag(sync=True)
 

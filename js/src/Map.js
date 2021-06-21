@@ -70,6 +70,10 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     }, { passive: false });
 
     this.el.appendChild(this.map_container);
+    // Makes temporal layers works (ノಠ益ಠ)ノ彡┻━┻
+    this.timeTravelDiv = document.createElement('div');
+    this.timeTravelDiv.setAttribute("id", "timeTravelDiv");
+    this.el.appendChild(this.timeTravelDiv);
 
     this.layer_views = new widgets.ViewList(
       this.add_layer_model,
@@ -85,7 +89,8 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
 
       this.layer_views.update(this.model.get('layers'));
       this.model_events();
-
+      // Fix pixel not squared
+      this.obj.getActivatedContext().refresh()
       return this;
     });
   }
@@ -167,6 +172,15 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
           distance: zoom[2]
         } : undefined
         nav.zoomTo(geoPos, options);
+      },
+      this
+    );
+    this.listenTo(
+      this.model,
+      'change:time',
+      function () {
+        var time = this.model.get('time')
+        this.obj.setTime(time)
       },
       this
     );
