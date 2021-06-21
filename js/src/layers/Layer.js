@@ -19,8 +19,6 @@ export class MizarLayerModel extends widgets.WidgetModel {
       name: '',
       background: true,
       visible: true,
-      attribution: '',
-      copyright_url: '',
       url: '',
     };
   }
@@ -58,12 +56,6 @@ export class MizarLayerView extends utils.MizarWidgetView {
     }
     if (this.model.has('visible')) {
       conf.visible = this.model.get('visible')
-    }
-    if (this.model.get('attribution')) {
-      conf.attribution = this.model.get('attribution')
-    }
-    if (this.model.get('copyright_url')) {
-      conf.copyright_url = this.model.get('copyright_url')
     }
     if (this.model.get('url')) {
       conf.baseUrl = this.model.get('url')

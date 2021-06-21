@@ -28,8 +28,6 @@ class OSMLayer(Widget):
     # Some properties extracted from 'AbstractLayer configuration'
     # Should be the same for each layer.
     name = Unicode().tag(sync=True)
-    attribution = Unicode().tag(sync=True)
-    copyright_url = Unicode().tag(sync=True)
     background = Bool(True).tag(sync=True)
     visible = Bool(True).tag(sync=True)
     opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
@@ -49,8 +47,6 @@ class WMSLayer(Widget):
     # Some properties extracted from 'AbstractLayer configuration'
     # Should be the same for each layer.
     name = Unicode().tag(sync=True)
-    attribution = Unicode().tag(sync=True)
-    copyright_url = Unicode().tag(sync=True)
     background = Bool(True).tag(sync=True)
     visible = Bool(True).tag(sync=True)
     opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
@@ -73,8 +69,6 @@ class WMTSLayer(Widget):
     # Some properties extracted from 'AbstractLayer configuration'
     # Should be the same for each layer.
     name = Unicode().tag(sync=True)
-    attribution = Unicode().tag(sync=True)
-    copyright_url = Unicode().tag(sync=True)
     background = Bool(True).tag(sync=True)
     visible = Bool(True).tag(sync=True)
     opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
@@ -97,8 +91,6 @@ class HipsLayer(Widget):
     # Some properties extracted from 'AbstractLayer configuration'
     # Should be the same for each layer.
     name = Unicode().tag(sync=True)
-    attribution = Unicode().tag(sync=True)
-    copyright_url = Unicode().tag(sync=True)
     background = Bool(True).tag(sync=True)
     visible = Bool(True).tag(sync=True)
 
@@ -120,8 +112,6 @@ class GeoJSONLayer(Widget):
     # Some properties extracted from 'AbstractLayer configuration'
     # Should be the same for each layer.
     name = Unicode().tag(sync=True)
-    attribution = Unicode().tag(sync=True)
-    copyright_url = Unicode().tag(sync=True)
     background = Bool(False).tag(sync=True)
     visible = Bool(True).tag(sync=True)
     opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
