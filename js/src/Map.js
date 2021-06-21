@@ -36,10 +36,10 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     super.initialize(options);
   }
 
-  remove_layer_view(child_view) {
-    this.obj.removeLayer(child_view.obj);
-    child_view.remove();
-  }
+  // remove_layer_view(child_view) {
+  //   this.obj.removeLayer(child_view.obj);
+  //   child_view.remove();
+  // }
 
   remove_layer_view(child_view) {
     let layerID = child_view.obj.getID();
@@ -48,6 +48,7 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     // new layerID = this.obj.getLayerByID()
     // this.obj.removeLayer(child_view.obj);
     child_view.remove();
+    this.obj.getActivatedContext().refresh();
   }
 
   add_layer_model(child_model) {
