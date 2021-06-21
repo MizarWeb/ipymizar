@@ -28,7 +28,6 @@ export class MizarLayerModel extends widgets.WidgetModel {
 
 MizarLayerModel.serializers = {
   ...widgets.WidgetModel.serializers,
-  // popup: { deserialize: widgets.unpack_models }
 };
 
 
@@ -50,7 +49,7 @@ export class MizarLayerView extends utils.MizarWidgetView {
    */
   getBasicConf() {
     const conf = {}
-    if (this.model.has('crs')) {
+    if (this.model.get('crs')) {
       conf.crs = this.model.get('crs')
     }
     conf.opacity = this.model.has('opacity') ? this.model.get('opacity') * 100 : 100
@@ -60,13 +59,13 @@ export class MizarLayerView extends utils.MizarWidgetView {
     if (this.model.has('visible')) {
       conf.visible = this.model.get('visible')
     }
-    if (this.model.has('attribution')) {
+    if (this.model.get('attribution')) {
       conf.attribution = this.model.get('attribution')
     }
-    if (this.model.has('copyright_url')) {
+    if (this.model.get('copyright_url')) {
       conf.copyright_url = this.model.get('copyright_url')
     }
-    if (this.model.has('url')) {
+    if (this.model.get('url')) {
       conf.baseUrl = this.model.get('url')
     }
     return conf

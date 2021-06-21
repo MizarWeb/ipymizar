@@ -22,12 +22,13 @@ export class MizarGeoJSONLayerView extends layer.MizarLayerView {
     const options = {
       ...basicOptions,
       type: Mizar.LAYER.GeoJSON,
-      style: this.model.get('style'),
     }
     delete options.baseUrl
-    const url = this.model.get('url')
-    if (url) {
-      options.url = url
+    if (this.model.has('style')) {
+      options.style = this.model.get('style')
+    }
+    if (this.model.get('url')) {
+      options.url = this.model.get('url')
     }
     mizarMap.addLayer(options, (layerId) => {
       // store layer

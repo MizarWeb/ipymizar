@@ -27,9 +27,6 @@ export class MizarWMSLayerView extends layer.MizarLayerView {
     if (this.model.has('layers')) {
       basicOptions.layers = this.model.get('layers')
     }
-    // if (this.model.has('time')) {
-    //   basicOptions.time = this.model.get('time')
-    // }
     mizarMap.addLayer({
       ...basicOptions,
       type: Mizar.LAYER.WMS,

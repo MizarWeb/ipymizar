@@ -19,15 +19,21 @@ export class MizarWMTSLayerView extends layer.MizarLayerView {
   create_obj() {
     const mizarMap = this.map_view.obj
     const basicOptions = this.getBasicConf()
-    console.log("layers", this.model.get('layers'))
+    if (this.model.has('transparent')) {
+      basicOptions.transparent = this.model.get('transparent')
+    }
+    if (this.model.has('format')) {
+      basicOptions.format = this.model.get('format')
+    }
+    if (this.model.has('layers')) {
+      basicOptions.layers = this.model.get('layers')
+    }
     mizarMap.addLayer({
       ...basicOptions,
-      type: Mizar.LAYER.WTMS,
-      layers: this.model.get('layers'),
+      type: Mizar.LAYER.WMTS,
     }, (layerId) => {
       // store layer
       this.obj = mizarMap.getLayerByID(layerId)
     })
-    console.log("WMTS layer", this.obj)
   }
 }
