@@ -51,6 +51,11 @@ class Layer(Widget, InteractMixin):
     visible = Bool(True).tag(sync=True)
     opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
 
+
+class OSMLayer(Layer):
+    _view_name = Unicode('MizarOSMLayerView').tag(sync=True)
+    _model_name = Unicode('MizarOSMLayerModel').tag(sync=True)
+
     # Some specific properties of this layer
     url = Unicode('https://c.tile.openstreetmap.org').tag(sync=True)
 
@@ -60,26 +65,15 @@ class WMSLayer(Layer):
     _model_name = Unicode('MizarWMSLayerModel').tag(sync=True)
 
     # Some specific properties of this layer
-    url = Unicode('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').tag(sync=True)
+    url = Unicode('').tag(sync=True)
     layers = Unicode(doc="Layers to display on map. Value is a comma-separated list of layer names.").tag(sync=True)
     format = Unicode('image/jpeg', doc="Format for the map output").tag(sync=True)
     transparent = Bool(False, doc="Whether the layer should be transparent. Default is false").tag(sync=True)
 
 
-class WMTSLayer(Widget):
+class WMTSLayer(Layer):
     _view_name = Unicode('MizarWMTSLayerView').tag(sync=True)
     _model_name = Unicode('MizarWMTSLayerModel').tag(sync=True)
-    _view_module = Unicode('jupyter-mizar').tag(sync=True)
-    _model_module = Unicode('jupyter-mizar').tag(sync=True)
-    _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
-    _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
-
-    # Some properties extracted from 'AbstractLayer configuration'
-    # Should be the same for each layer.
-    name = Unicode().tag(sync=True)
-    background = Bool(True).tag(sync=True)
-    visible = Bool(True).tag(sync=True)
-    opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
 
     # Some specific properties of this layer
     url = Unicode().tag(sync=True)
@@ -88,46 +82,22 @@ class WMTSLayer(Widget):
     transparent = Bool(False, doc="Whether the map background should be transparent. Default is false").tag(sync=True)
 
 
-class HipsLayer(Widget):
+class HipsLayer(Layer):
     _view_name = Unicode('MizarHipsLayerView').tag(sync=True)
     _model_name = Unicode('MizarHipsLayerModel').tag(sync=True)
-    _view_module = Unicode('jupyter-mizar').tag(sync=True)
-    _model_module = Unicode('jupyter-mizar').tag(sync=True)
-    _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
-    _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
-
-    # Some properties extracted from 'AbstractLayer configuration'
-    # Should be the same for each layer.
-    name = Unicode().tag(sync=True)
-    background = Bool(True).tag(sync=True)
-    visible = Bool(True).tag(sync=True)
-
-    # Some style properties
-    opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
 
     # Some specific properties of this layer
-    url = Unicode('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').tag(sync=True)
+    url = Unicode('').tag(sync=True)
 
 
-class GeoJSONLayer(Widget):
+class GeoJSONLayer(Layer):
     _view_name = Unicode('MizarGeoJSONLayerView').tag(sync=True)
     _model_name = Unicode('MizarGeoJSONLayerModel').tag(sync=True)
-    _view_module = Unicode('jupyter-mizar').tag(sync=True)
-    _model_module = Unicode('jupyter-mizar').tag(sync=True)
-    _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
-    _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
-
-    # Some properties extracted from 'AbstractLayer configuration'
-    # Should be the same for each layer.
-    name = Unicode().tag(sync=True)
-    background = Bool(False).tag(sync=True)
-    visible = Bool(True).tag(sync=True)
-    opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
-    style = Dict().tag(sync=True)
 
     # Some specific properties of this layer
     url = Unicode().tag(sync=True)
     data = Dict().tag(sync=True)
+    style = Dict().tag(sync=True)
 
     @observe("data")
     def _update_data(self, change):
@@ -147,7 +117,7 @@ class CRS:
     Sun = "IAU:Sun"
 
 
-class MizarMap(DOMWidget):
+class MizarMap(DOMWidget, InteractMixin):
     """Map class.
 
     The Map class is the main widget in ipymizar.
