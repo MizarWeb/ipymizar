@@ -50,7 +50,7 @@ export class MizarLayerView extends utils.MizarWidgetView {
     if (this.model.get('crs')) {
       conf.crs = this.model.get('crs')
     }
-    conf.opacity = this.model.has('opacity') ? this.model.get('opacity') * 100 : 100
+    conf.opacity = this.model.has('opacity')
     if (this.model.has('background')) {
       conf.background = this.model.get('background')
     }
@@ -69,6 +69,14 @@ export class MizarLayerView extends utils.MizarWidgetView {
       'change:opacity',
       function() {
         this.obj.setOpacity(this.model.get('opacity'));
+      },
+      this
+    );
+    this.listenTo(
+      this.model,
+      'change:visible',
+      function() {
+        this.obj.setVisible(this.model.get('visible'));
       },
       this
     );

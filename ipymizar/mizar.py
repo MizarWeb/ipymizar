@@ -1,15 +1,32 @@
 import copy
 
 from ipywidgets import (
+    interactive, Box,
     Widget, DOMWidget, CallbackDispatcher, widget_serialization,
 )
 
 from traitlets import (
-    CFloat, Float, Int, Unicode, Tuple, List, Instance, Bool, Dict,
-    default, observe, validate, TraitError, Union
+    CFloat, Float, Unicode, Tuple, List, Instance, Bool, Dict,
+    default, link, observe, validate, TraitError, Union
 )
 
 from ._version import EXTENSION_VERSION
+
+
+class InteractMixin(object):
+    """Abstract InteractMixin class."""
+
+    def interact(self, **kwargs):
+        c = []
+        for name, abbrev in kwargs.items():
+            default = getattr(self, name)
+            widget = interactive.widget_from_abbrev(abbrev, default)
+            if not widget.description:
+                widget.description = name
+            widget.link = link((widget, 'value'), (self, name))
+            c.append(widget)
+        cont = Box(children=c)
+        return cont
 
 
 class LayerException(TraitError):
@@ -17,9 +34,11 @@ class LayerException(TraitError):
     pass
 
 
-class OSMLayer(Widget):
-    _view_name = Unicode('MizarOSMLayerView').tag(sync=True)
-    _model_name = Unicode('MizarOSMLayerModel').tag(sync=True)
+class Layer(Widget, InteractMixin):
+
+    _view_name = Unicode('MizarLayerView').tag(sync=True)
+    _model_name = Unicode('MizarLayerModel').tag(sync=True)
+
     _view_module = Unicode('jupyter-mizar').tag(sync=True)
     _model_module = Unicode('jupyter-mizar').tag(sync=True)
     _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
@@ -36,20 +55,9 @@ class OSMLayer(Widget):
     url = Unicode('https://c.tile.openstreetmap.org').tag(sync=True)
 
 
-class WMSLayer(Widget):
+class WMSLayer(Layer):
     _view_name = Unicode('MizarWMSLayerView').tag(sync=True)
     _model_name = Unicode('MizarWMSLayerModel').tag(sync=True)
-    _view_module = Unicode('jupyter-mizar').tag(sync=True)
-    _model_module = Unicode('jupyter-mizar').tag(sync=True)
-    _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
-    _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
-
-    # Some properties extracted from 'AbstractLayer configuration'
-    # Should be the same for each layer.
-    name = Unicode().tag(sync=True)
-    background = Bool(True).tag(sync=True)
-    visible = Bool(True).tag(sync=True)
-    opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
 
     # Some specific properties of this layer
     url = Unicode('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').tag(sync=True)
