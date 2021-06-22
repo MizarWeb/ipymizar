@@ -50,7 +50,9 @@ export class MizarLayerView extends utils.MizarWidgetView {
     if (this.model.get('crs')) {
       conf.crs = this.model.get('crs')
     }
-    conf.opacity = this.model.get('opacity')
+    // In the constructor the opacity is a number in [0, 100].
+    // But it must be in [0, 1] with layer.setOpacity(x).
+    conf.opacity = this.model.get('opacity') * 100
     if (this.model.has('background')) {
       conf.background = this.model.get('background')
     }
