@@ -1,58 +1,25 @@
-ipymizar
-========
+# ipymizar
 
+A Jupyter / Mizar plugin to display interactive 3D views of planets and the sky in a notebook.
 
-Python API
+## Python API
 
-```python
-import json
+### Create a Planet Map and update it
 
-from ipymizar import Mizar, CRS, WMS
+![Earth](IntroEarth.png)
 
-mizar = Mizar(type="Planet", ctx=dict(crs=CRS.WGS84))
+### Create a Sky Map and update it
 
-# Or maybe
-# from ipymizar import Planet
-# planet = Planet(crs=CRS.WGS84)
+![Sky](IntroSky.png)
 
-# Add a WMS layer
-wms_layer = WMS(
-    name="Blue Marble",
-    base_url="http://80.158.6.138/mapserv?map=WMS_BLUEMARBLE",
-    background=True,
-)
-# Or maybe with preconfigured WMS layers
-# wms_layer = WMS.BLUEMARBLE
-
-mizar.add_layer(wms_layer)
-
-# Display the Earth and the WMS layer
-mizar
-
-# The above in executed in a Jupyter Notebook cell. It creates
-# a Mizar world instance. The next commands update that view.
-
-# Redefine the zoom. In a 3D context the zoom is not as simple as in 2D,
-# it's not a single value. So a method is required here instead of a number attribute.
-mizar.zoom_to([-160, 80])
-
-# Add a GeoJSON layer
-with open('file.json') as f:
-    data = json.load(f)
-
-geojson_layer = GeoJSON(data=data)
-mizar.add_layer(geojson_layer)
-```
-
-Installation
-------------
+## Installation
 
 To install use pip:
 
     $ pip install ipymizar
 
-Dev installation
-----------------
+## Dev installation
+
 Clone the repo:
 
     $ git clone LINKTOGIT
