@@ -36,6 +36,13 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     super.initialize(options);
   }
 
+  /**
+   * When component dies, remove the interval that checks is Mizar canvas is well sized
+   */
+  remove() {
+    window.clearInterval(this.mizarParentAttrIntervalId);
+  }
+
   remove_layer_view(child_view) {
     let layerID = child_view.obj.getID();
     const result = this.obj.removeLayer(layerID);
@@ -51,17 +58,23 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     });
   }
 
+  stopWheel(event) {
+    event.returnValue = false; // Return false to stop mouse wheel to be propagated when using onmousewheel
+    return false;
+  }
+
   render() {
     super.render();
     this.el.classList.add('jupyter-widgets');
     this.el.classList.add('mizar-widgets');
     this.map_container = document.createElement('canvas');
     // Fix mouse wheel
-    this.map_container.addEventListener("mousewheel", function (event) {
-      event.preventDefault();
-    }, { passive: false });
+    this.map_container.addEventListener("mousewheel", this.stopWheel, { passive: false });
+    this.map_container.addEventListener("DOMMouseScroll", this.stopWheel, { passive: false });
 
+    // Add Mizar canvas to DOM
     this.el.appendChild(this.map_container);
+
     // Makes temporal layers works (ノಠ益ಠ)ノ彡┻━┻
     this.timeTravelDiv = document.createElement('div');
     this.timeTravelDiv.setAttribute("id", "timeTravelDiv");
@@ -75,16 +88,37 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     this.displayed.then(this.render_mizar.bind(this));
   }
 
+  /**
+   * Checks every 300 ms if the canvas is correct using the canvas parent real size
+   */
+  watchMizarCanvasSize() {
+    this.mizarParentAttrIntervalId = setInterval(function(self){
+      const attrHeight = parseInt(self.map_container.getAttribute("height"), 10)
+      const attrWidth = parseInt(self.map_container.getAttribute("width"), 10)
+      const currentHeight = self.el.offsetHeight
+      const currentWidth = self.el.offsetWidth
+      if(currentHeight !== attrHeight || currentWidth !== attrWidth){
+        self.map_container.setAttribute("height", currentHeight) 
+        self.map_container.setAttribute("width", currentWidth) 
+        // Fix pixel not squared
+        self.obj.getActivatedContext().refresh()
+      }
+    }, 300, this);
+  }
+
   render_mizar() {
     this.create_obj().then(() => {
       this.layer_views.update(this.model.get('layers'));
       this.model_events();
-      // Fix pixel not squared
-      this.obj.getActivatedContext().refresh()
+      this.watchMizarCanvasSize()
+
       return this;
     });
   }
 
+  /**
+   * Build the Mizar config object and launch it
+   */
   create_obj() {
     return this.layoutPromise.then(() => {
       var mizarOptions = {
@@ -103,8 +137,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
         },
         navigation: {
           initTarget: initTarget,
-          inertia: true
-          // initTarget: this.model.get('init_target')
         }
       };
       switch (Mizar.CRS_TO_CONTEXT[crs]) {
@@ -121,6 +153,9 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
     });
   }
 
+  /**
+   * Track Python variables changed
+   */
   model_events() {
     this.listenTo(
       this.model,
