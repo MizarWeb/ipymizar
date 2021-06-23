@@ -1,0 +1,1937 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>ipymizar.mizar API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>ipymizar.mizar</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import copy
+
+from ipywidgets import (
+    interactive, Box,
+    Widget, DOMWidget, CallbackDispatcher, widget_serialization,
+)
+
+from traitlets import (
+    CFloat, Float, Unicode, Tuple, List, Instance, Bool, Dict,
+    link, observe, validate, TraitError
+)
+
+from ._version import EXTENSION_VERSION
+
+_CRS_TO_CONTEXT = {
+    &#34;Equatorial&#34;: &#34;Sky&#34;,
+    &#34;Galactic&#34;: &#34;Sky&#34;,
+    &#34;CRS:84&#34;: &#34;Planet&#34;,
+    &#34;IAU2000:49901&#34;: &#34;Planet&#34;,
+    &#34;IAU2000:49900&#34;: &#34;Planet&#34;,
+    &#34;IAU2000:30101&#34;: &#34;Planet&#34;,
+    &#34;IAU2000:30100&#34;: &#34;Planet&#34;,
+    &#34;HorizontalLocal&#34;: &#34;Ground&#34;,
+    &#34;IAU:Sun&#34;: &#34;Planet&#34;
+}
+
+
+class InteractMixin(object):
+    &#34;&#34;&#34;Abstract InteractMixin class.&#34;&#34;&#34;
+
+    def interact(self, **kwargs):
+        c = []
+        for name, abbrev in kwargs.items():
+            default = getattr(self, name)
+            widget = interactive.widget_from_abbrev(abbrev, default)
+            if not widget.description:
+                widget.description = name
+            widget.link = link((widget, &#39;value&#39;), (self, name))
+            c.append(widget)
+        cont = Box(children=c)
+        return cont
+
+
+class LayerException(TraitError):
+    &#34;&#34;&#34;Custom LayerException class.&#34;&#34;&#34;
+    pass
+
+
+class Layer(Widget, InteractMixin):
+    &#34;&#34;&#34;Abstract Layer class.
+
+    Base class for all layers in ipymizar.
+
+    Attributes
+    ----------
+    name : str
+        Custom name for the layer.
+    background: bool
+        Set the layer as the background, True by default.
+    visible: bool
+        Whether the layer is displayed or not, True by default.
+    opacity: float
+        Layer opacity, between 0.0 and 1.0, 1.0 by default.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarLayerModel&#39;).tag(sync=True)
+
+    _view_module = Unicode(&#39;jupyter-mizar&#39;).tag(sync=True)
+    _model_module = Unicode(&#39;jupyter-mizar&#39;).tag(sync=True)
+    _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
+    _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
+
+    # Some properties extracted from &#39;AbstractLayer configuration&#39;
+    # Should be the same for each layer.
+    name = Unicode().tag(sync=True)
+    background = Bool(True).tag(sync=True)
+    visible = Bool(True).tag(sync=True)
+    opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)
+
+
+class OSMLayer(Layer):
+    &#34;&#34;&#34;OpenStreetMap layer class.
+
+    Attributes
+    ----------
+    url: str
+        Url to the OSM server, &#39;https://c.tile.openstreetmap.org&#39; by default.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarOSMLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarOSMLayerModel&#39;).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode(&#39;https://c.tile.openstreetmap.org&#39;).tag(sync=True)
+
+
+class WMSLayer(Layer):
+    &#34;&#34;&#34;WMS layer class.
+
+    Attributes
+    ----------
+    url: str
+        Url to the WMS server.
+    layers: str
+        Comma-separated list of WMS layers to show.
+    format: str
+        WMS image format (use `&#39;image/png&#39;` for layers with transparency).
+        &#39;image/jpeg&#39; by default
+    transparent: bool
+        If true, the WMS service will return images with transparency.
+        False by default.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarWMSLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarWMSLayerModel&#39;).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode(&#39;&#39;).tag(sync=True)
+    layers = Unicode().tag(sync=True)
+    format = Unicode(&#39;image/jpeg&#39;).tag(sync=True)
+    transparent = Bool(False).tag(sync=True)
+
+
+class WMTSLayer(Layer):
+    &#34;&#34;&#34;WMTS layer class.
+
+    Attributes
+    ----------
+    url: str
+        Url to the WMTS server.
+    layers: str
+        Comma-separated list of WMS layers to show.
+    format: str
+        WMS image format (use `&#39;image/png&#39;` for layers with transparency).
+        &#39;image/jpeg&#39; by default
+    transparent: bool
+        If true, the WMS service will return images with transparency.
+        False by default.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarWMTSLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarWMTSLayerModel&#39;).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode().tag(sync=True)
+    layers = Unicode().tag(sync=True)
+    format = Unicode(&#39;image/jpeg&#39;).tag(sync=True)
+    transparent = Bool(False).tag(sync=True)
+
+
+class HipsLayer(Layer):
+    &#34;&#34;&#34;Hips layer class.
+
+    Attributes
+    ----------
+    url: str
+        Url to the Hips server.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarHipsLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarHipsLayerModel&#39;).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode(&#39;&#39;).tag(sync=True)
+
+
+class GeoJSONLayer(Layer):
+    &#34;&#34;&#34;GeoJSON layer class.
+
+    Layer created from a GeoJSON data structure.
+
+    Attributes
+    ----------
+    url: str
+        Url to a GeoJSON file. Mutually exclusive with `data`.
+    data: dict
+        The JSON data structure.
+    style: dict
+        Extra style to apply to the features.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarGeoJSONLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarGeoJSONLayerModel&#39;).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode().tag(sync=True)
+    data = Dict().tag(sync=True)
+    style = Dict().tag(sync=True)
+
+    @observe(&#34;data&#34;)
+    def _update_data(self, change):
+        # We need to make a deep copy for ipywidgets to see the change
+        self.data = copy.deepcopy(self.data)
+
+
+class CRS:
+    &#34;&#34;&#34;CRS options&#34;&#34;&#34;
+
+    Equatorial = &#34;Equatorial&#34;
+    Galactic = &#34;Galactic&#34;
+    WGS84 = &#34;CRS:84&#34;
+    Mars_2000 = &#34;IAU2000:49901&#34;
+    Mars_2000_old = &#34;IAU2000:49900&#34;
+    Moon_2000 = &#34;IAU2000:30101&#34;
+    Moon_2000_old = &#34;IAU2000:30100&#34;
+    HorizontalLocal = &#34;HorizontalLocal&#34;
+    Sun = &#34;IAU:Sun&#34;
+
+    @staticmethod
+    def list(context=None):
+        &#34;&#34;&#34;List the CRS options available.
+
+        Parameters
+        ----------
+        context : str, optional
+            &#39;Sky&#39; or &#39;Planet&#39;, by default None
+
+        Returns
+        -------
+        list:
+            List of CRS.
+        &#34;&#34;&#34;
+        crs_opts = []
+        for attr in dir(CRS):
+            if not attr.startswith(&#34;_&#34;) and attr != &#34;list&#34;:
+                if context:
+                    crs_context = _CRS_TO_CONTEXT[getattr(CRS, attr)]
+                    if crs_context == context:
+                        crs_opts.append(attr)
+                else:
+                    crs_opts.append(attr)
+        return crs_opts
+
+
+class MizarMap(DOMWidget, InteractMixin):
+    &#34;&#34;&#34;Map class.
+
+    The Map class is the main widget in ipymizar.
+
+    Attributes
+    ----------
+    layers: list of Layer instances
+        The list of layers that are currently on the map.
+    center: tuple(float, float)
+        The current center of the map. Default is (0.0, 0.0).
+    zoom_opts: dict
+        Options to control the camera/zoom view, depending on the
+        context (Planet vs. Sky):
+            distance: int
+                Planet only. Final zooming distance in meters
+            fov: float
+                Sky only. Field of view of the camera in decimal degree
+    crs: str
+        Coordinate reference system. Use the CRS class to see the
+        options available. Default is `CRS.WGS84`.
+    time: str
+        Time set to each layer (if relevant) of the map.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarMapView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarMapModel&#39;).tag(sync=True)
+    _view_module = Unicode(&#39;jupyter-mizar&#39;).tag(sync=True)
+    _model_module = Unicode(&#39;jupyter-mizar&#39;).tag(sync=True)
+    _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
+    _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
+
+    # URL of the window where the map is displayed
+    window_url = Unicode(read_only=True).tag(sync=True)
+
+    crs = Unicode(CRS.WGS84).tag(sync=True)
+    context = Unicode(&#34;Planet&#34;, read_only=True)
+    center = Tuple(CFloat(), CFloat(), default_value=(0.0, 0.0)).tag(sync=True)
+    zoom_opts = Dict().tag(sync=True)
+
+    time = Unicode().tag(sync=True)
+
+    layers = Tuple().tag(
+        trait=Instance(Layer),
+        sync=True,
+        **widget_serialization
+    )
+
+    def __init__(self, **kwargs):
+        super(MizarMap, self).__init__(**kwargs)
+        self.set_trait(&#34;context&#34;, _CRS_TO_CONTEXT[self.crs])
+
+        self.on_msg(self._handle_mizar_event)
+
+    _layer_ids = List()
+
+    @validate(&#39;layers&#39;)
+    def _validate_layers(self, proposal):
+        &#39;&#39;&#39;Validate layers list.
+
+        Makes sure only one instance of any given layer can exist in the
+        layers list.
+        &#39;&#39;&#39;
+        self._layer_ids = [layer.model_id for layer in proposal.value]
+        if len(set(self._layer_ids)) != len(self._layer_ids):
+            raise LayerException(
+                &#39;duplicate layer detected, only use each layer once&#39;
+            )
+        return proposal.value
+
+    def add_layer(self, layer):
+        &#34;&#34;&#34;Add a layer on the map.
+
+        Parameters
+        ----------
+        layer: Layer instance
+            The new layer to add.
+        &#34;&#34;&#34;
+        if layer.model_id in self._layer_ids:
+            raise LayerException(&#39;layer already on map: %r&#39; % layer)
+        self.layers = tuple([layer for layer in self.layers] + [layer])
+
+    def remove_layer(self, rm_layer):
+        &#34;&#34;&#34;Remove a layer from the map.
+
+        Parameters
+        ----------
+        rm_layer: Layer instance
+            The layer to remove.
+        &#34;&#34;&#34;
+        if rm_layer.model_id not in self._layer_ids:
+            raise LayerException(&#39;layer not on map: %r&#39; % rm_layer)
+        self.layers = tuple([
+            layer
+            for layer in self.layers
+            if layer.model_id != rm_layer.model_id
+        ])
+
+    def clear_layers(self):
+        &#34;&#34;&#34;Remove all layers from the map.&#34;&#34;&#34;
+        self.layers = ()
+
+    # Event handling
+    _interaction_callbacks = Instance(CallbackDispatcher, ())
+
+    def _handle_mizar_event(self, _, content, buffers):
+        if content.get(&#39;event&#39;, &#39;&#39;) == &#39;interaction&#39;:
+            self._interaction_callbacks(**content)
+
+    @validate(&#34;zoom_opts&#34;)
+    def _valid_zoom_opts(self, proposal):
+        zoom_opts = proposal[&#34;value&#34;]
+        distance = zoom_opts.get(&#34;distance&#34;)
+        if distance is not None and not isinstance(distance, (int, float)):
+            raise TraitError(&#34;&#39;distance&#39; must be an integer.&#34;)
+        return zoom_opts
+
+    def zoom_to(self, center, **kwargs):
+        &#34;&#34;&#34;Zooms to a 3D position (longitude, latitude).
+
+        Parameters
+        ----------
+        center : Tuple(Float, Float)
+            Spatial position in decimal degree [longitude, latitude]
+        kwargs:
+            distance: int
+                Planet only. Final zooming distance in meters
+            fov: float
+                Sky only. Field of view of the camera in decimal degree
+
+        &#34;&#34;&#34;
+        # On the JS side: call zoomTo watching simultaneously both these
+        # parameters to trigger a single call to the method.
+        self.center = center
+        self.zoom_opts = kwargs</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="ipymizar.mizar.CRS"><code class="flex name class">
+<span>class <span class="ident">CRS</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>CRS options</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CRS:
+    &#34;&#34;&#34;CRS options&#34;&#34;&#34;
+
+    Equatorial = &#34;Equatorial&#34;
+    Galactic = &#34;Galactic&#34;
+    WGS84 = &#34;CRS:84&#34;
+    Mars_2000 = &#34;IAU2000:49901&#34;
+    Mars_2000_old = &#34;IAU2000:49900&#34;
+    Moon_2000 = &#34;IAU2000:30101&#34;
+    Moon_2000_old = &#34;IAU2000:30100&#34;
+    HorizontalLocal = &#34;HorizontalLocal&#34;
+    Sun = &#34;IAU:Sun&#34;
+
+    @staticmethod
+    def list(context=None):
+        &#34;&#34;&#34;List the CRS options available.
+
+        Parameters
+        ----------
+        context : str, optional
+            &#39;Sky&#39; or &#39;Planet&#39;, by default None
+
+        Returns
+        -------
+        list:
+            List of CRS.
+        &#34;&#34;&#34;
+        crs_opts = []
+        for attr in dir(CRS):
+            if not attr.startswith(&#34;_&#34;) and attr != &#34;list&#34;:
+                if context:
+                    crs_context = _CRS_TO_CONTEXT[getattr(CRS, attr)]
+                    if crs_context == context:
+                        crs_opts.append(attr)
+                else:
+                    crs_opts.append(attr)
+        return crs_opts</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="ipymizar.mizar.CRS.Equatorial"><code class="name">var <span class="ident">Equatorial</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ipymizar.mizar.CRS.Galactic"><code class="name">var <span class="ident">Galactic</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ipymizar.mizar.CRS.HorizontalLocal"><code class="name">var <span class="ident">HorizontalLocal</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ipymizar.mizar.CRS.Mars_2000"><code class="name">var <span class="ident">Mars_2000</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ipymizar.mizar.CRS.Mars_2000_old"><code class="name">var <span class="ident">Mars_2000_old</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ipymizar.mizar.CRS.Moon_2000"><code class="name">var <span class="ident">Moon_2000</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ipymizar.mizar.CRS.Moon_2000_old"><code class="name">var <span class="ident">Moon_2000_old</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ipymizar.mizar.CRS.Sun"><code class="name">var <span class="ident">Sun</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ipymizar.mizar.CRS.WGS84"><code class="name">var <span class="ident">WGS84</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="ipymizar.mizar.CRS.list"><code class="name flex">
+<span>def <span class="ident">list</span></span>(<span>context=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List the CRS options available.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>context</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>'Sky' or 'Planet', by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list:</code></dt>
+<dd>List of CRS.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def list(context=None):
+    &#34;&#34;&#34;List the CRS options available.
+
+    Parameters
+    ----------
+    context : str, optional
+        &#39;Sky&#39; or &#39;Planet&#39;, by default None
+
+    Returns
+    -------
+    list:
+        List of CRS.
+    &#34;&#34;&#34;
+    crs_opts = []
+    for attr in dir(CRS):
+        if not attr.startswith(&#34;_&#34;) and attr != &#34;list&#34;:
+            if context:
+                crs_context = _CRS_TO_CONTEXT[getattr(CRS, attr)]
+                if crs_context == context:
+                    crs_opts.append(attr)
+            else:
+                crs_opts.append(attr)
+    return crs_opts</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="ipymizar.mizar.GeoJSONLayer"><code class="flex name class">
+<span>class <span class="ident">GeoJSONLayer</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>GeoJSON layer class.</p>
+<p>Layer created from a GeoJSON data structure.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>url</code></strong> :&ensp;<code>str</code></dt>
+<dd>Url to a GeoJSON file. Mutually exclusive with <code>data</code>.</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The JSON data structure.</dd>
+<dt><strong><code>style</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Extra style to apply to the features.</dd>
+</dl>
+<p>Public constructor</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GeoJSONLayer(Layer):
+    &#34;&#34;&#34;GeoJSON layer class.
+
+    Layer created from a GeoJSON data structure.
+
+    Attributes
+    ----------
+    url: str
+        Url to a GeoJSON file. Mutually exclusive with `data`.
+    data: dict
+        The JSON data structure.
+    style: dict
+        Extra style to apply to the features.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarGeoJSONLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarGeoJSONLayerModel&#39;).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode().tag(sync=True)
+    data = Dict().tag(sync=True)
+    style = Dict().tag(sync=True)
+
+    @observe(&#34;data&#34;)
+    def _update_data(self, change):
+        # We need to make a deep copy for ipywidgets to see the change
+        self.data = copy.deepcopy(self.data)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></li>
+<li>ipywidgets.widgets.widget.Widget</li>
+<li>ipywidgets.widgets.widget.LoggingHasTraits</li>
+<li>traitlets.traitlets.HasTraits</li>
+<li>traitlets.traitlets.HasDescriptors</li>
+<li><a title="ipymizar.mizar.InteractMixin" href="#ipymizar.mizar.InteractMixin">InteractMixin</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="ipymizar.mizar.GeoJSONLayer.data"><code class="name">var <span class="ident">data</span></code></dt>
+<dd>
+<div class="desc"><p>An instance of a Python dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.GeoJSONLayer.style"><code class="name">var <span class="ident">style</span></code></dt>
+<dd>
+<div class="desc"><p>An instance of a Python dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.GeoJSONLayer.url"><code class="name">var <span class="ident">url</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ipymizar.mizar.Layer.background" href="#ipymizar.mizar.Layer.background">background</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.name" href="#ipymizar.mizar.Layer.name">name</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.opacity" href="#ipymizar.mizar.Layer.opacity">opacity</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.visible" href="#ipymizar.mizar.Layer.visible">visible</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ipymizar.mizar.HipsLayer"><code class="flex name class">
+<span>class <span class="ident">HipsLayer</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Hips layer class.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>url</code></strong> :&ensp;<code>str</code></dt>
+<dd>Url to the Hips server.</dd>
+</dl>
+<p>Public constructor</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HipsLayer(Layer):
+    &#34;&#34;&#34;Hips layer class.
+
+    Attributes
+    ----------
+    url: str
+        Url to the Hips server.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarHipsLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarHipsLayerModel&#39;).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode(&#39;&#39;).tag(sync=True)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></li>
+<li>ipywidgets.widgets.widget.Widget</li>
+<li>ipywidgets.widgets.widget.LoggingHasTraits</li>
+<li>traitlets.traitlets.HasTraits</li>
+<li>traitlets.traitlets.HasDescriptors</li>
+<li><a title="ipymizar.mizar.InteractMixin" href="#ipymizar.mizar.InteractMixin">InteractMixin</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="ipymizar.mizar.HipsLayer.url"><code class="name">var <span class="ident">url</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ipymizar.mizar.Layer.background" href="#ipymizar.mizar.Layer.background">background</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.name" href="#ipymizar.mizar.Layer.name">name</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.opacity" href="#ipymizar.mizar.Layer.opacity">opacity</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.visible" href="#ipymizar.mizar.Layer.visible">visible</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ipymizar.mizar.InteractMixin"><code class="flex name class">
+<span>class <span class="ident">InteractMixin</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract InteractMixin class.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InteractMixin(object):
+    &#34;&#34;&#34;Abstract InteractMixin class.&#34;&#34;&#34;
+
+    def interact(self, **kwargs):
+        c = []
+        for name, abbrev in kwargs.items():
+            default = getattr(self, name)
+            widget = interactive.widget_from_abbrev(abbrev, default)
+            if not widget.description:
+                widget.description = name
+            widget.link = link((widget, &#39;value&#39;), (self, name))
+            c.append(widget)
+        cont = Box(children=c)
+        return cont</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></li>
+<li><a title="ipymizar.mizar.MizarMap" href="#ipymizar.mizar.MizarMap">MizarMap</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="ipymizar.mizar.InteractMixin.interact"><code class="name flex">
+<span>def <span class="ident">interact</span></span>(<span>self, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def interact(self, **kwargs):
+    c = []
+    for name, abbrev in kwargs.items():
+        default = getattr(self, name)
+        widget = interactive.widget_from_abbrev(abbrev, default)
+        if not widget.description:
+            widget.description = name
+        widget.link = link((widget, &#39;value&#39;), (self, name))
+        c.append(widget)
+    cont = Box(children=c)
+    return cont</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="ipymizar.mizar.Layer"><code class="flex name class">
+<span>class <span class="ident">Layer</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract Layer class.</p>
+<p>Base class for all layers in ipymizar.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>Custom name for the layer.</dd>
+<dt><strong><code>background</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Set the layer as the background, True by default.</dd>
+<dt><strong><code>visible</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the layer is displayed or not, True by default.</dd>
+<dt><strong><code>opacity</code></strong> :&ensp;<code>float</code></dt>
+<dd>Layer opacity, between 0.0 and 1.0, 1.0 by default.</dd>
+</dl>
+<p>Public constructor</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Layer(Widget, InteractMixin):
+    &#34;&#34;&#34;Abstract Layer class.
+
+    Base class for all layers in ipymizar.
+
+    Attributes
+    ----------
+    name : str
+        Custom name for the layer.
+    background: bool
+        Set the layer as the background, True by default.
+    visible: bool
+        Whether the layer is displayed or not, True by default.
+    opacity: float
+        Layer opacity, between 0.0 and 1.0, 1.0 by default.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarLayerModel&#39;).tag(sync=True)
+
+    _view_module = Unicode(&#39;jupyter-mizar&#39;).tag(sync=True)
+    _model_module = Unicode(&#39;jupyter-mizar&#39;).tag(sync=True)
+    _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
+    _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
+
+    # Some properties extracted from &#39;AbstractLayer configuration&#39;
+    # Should be the same for each layer.
+    name = Unicode().tag(sync=True)
+    background = Bool(True).tag(sync=True)
+    visible = Bool(True).tag(sync=True)
+    opacity = Float(1.0, min=0.0, max=1.0).tag(sync=True)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>ipywidgets.widgets.widget.Widget</li>
+<li>ipywidgets.widgets.widget.LoggingHasTraits</li>
+<li>traitlets.traitlets.HasTraits</li>
+<li>traitlets.traitlets.HasDescriptors</li>
+<li><a title="ipymizar.mizar.InteractMixin" href="#ipymizar.mizar.InteractMixin">InteractMixin</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="ipymizar.mizar.GeoJSONLayer" href="#ipymizar.mizar.GeoJSONLayer">GeoJSONLayer</a></li>
+<li><a title="ipymizar.mizar.HipsLayer" href="#ipymizar.mizar.HipsLayer">HipsLayer</a></li>
+<li><a title="ipymizar.mizar.OSMLayer" href="#ipymizar.mizar.OSMLayer">OSMLayer</a></li>
+<li><a title="ipymizar.mizar.WMSLayer" href="#ipymizar.mizar.WMSLayer">WMSLayer</a></li>
+<li><a title="ipymizar.mizar.WMTSLayer" href="#ipymizar.mizar.WMTSLayer">WMTSLayer</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="ipymizar.mizar.Layer.background"><code class="name">var <span class="ident">background</span></code></dt>
+<dd>
+<div class="desc"><p>A boolean (True, False) trait.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.Layer.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.Layer.opacity"><code class="name">var <span class="ident">opacity</span></code></dt>
+<dd>
+<div class="desc"><p>A float trait.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.Layer.visible"><code class="name">var <span class="ident">visible</span></code></dt>
+<dd>
+<div class="desc"><p>A boolean (True, False) trait.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="ipymizar.mizar.LayerException"><code class="flex name class">
+<span>class <span class="ident">LayerException</span></span>
+<span>(</span><span>...)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Custom LayerException class.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LayerException(TraitError):
+    &#34;&#34;&#34;Custom LayerException class.&#34;&#34;&#34;
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>traitlets.traitlets.TraitError</li>
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="ipymizar.mizar.MizarMap"><code class="flex name class">
+<span>class <span class="ident">MizarMap</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Map class.</p>
+<p>The Map class is the main widget in ipymizar.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>layers</code></strong> :&ensp;<code>list</code> of <code><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a> instances</code></dt>
+<dd>The list of layers that are currently on the map.</dd>
+<dt><strong><code>center</code></strong> :&ensp;<code>tuple(float, float)</code></dt>
+<dd>The current center of the map. Default is (0.0, 0.0).</dd>
+<dt><strong><code>zoom_opts</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Options to control the camera/zoom view, depending on the
+context (Planet vs. Sky):
+distance: int
+Planet only. Final zooming distance in meters
+fov: float
+Sky only. Field of view of the camera in decimal degree</dd>
+<dt><strong><code>crs</code></strong> :&ensp;<code>str</code></dt>
+<dd>Coordinate reference system. Use the CRS class to see the
+options available. Default is <code><a title="ipymizar.mizar.CRS.WGS84" href="#ipymizar.mizar.CRS.WGS84">CRS.WGS84</a></code>.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>str</code></dt>
+<dd>Time set to each layer (if relevant) of the map.</dd>
+</dl>
+<p>Public constructor</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MizarMap(DOMWidget, InteractMixin):
+    &#34;&#34;&#34;Map class.
+
+    The Map class is the main widget in ipymizar.
+
+    Attributes
+    ----------
+    layers: list of Layer instances
+        The list of layers that are currently on the map.
+    center: tuple(float, float)
+        The current center of the map. Default is (0.0, 0.0).
+    zoom_opts: dict
+        Options to control the camera/zoom view, depending on the
+        context (Planet vs. Sky):
+            distance: int
+                Planet only. Final zooming distance in meters
+            fov: float
+                Sky only. Field of view of the camera in decimal degree
+    crs: str
+        Coordinate reference system. Use the CRS class to see the
+        options available. Default is `CRS.WGS84`.
+    time: str
+        Time set to each layer (if relevant) of the map.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarMapView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarMapModel&#39;).tag(sync=True)
+    _view_module = Unicode(&#39;jupyter-mizar&#39;).tag(sync=True)
+    _model_module = Unicode(&#39;jupyter-mizar&#39;).tag(sync=True)
+    _view_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
+    _model_module_version = Unicode(EXTENSION_VERSION).tag(sync=True)
+
+    # URL of the window where the map is displayed
+    window_url = Unicode(read_only=True).tag(sync=True)
+
+    crs = Unicode(CRS.WGS84).tag(sync=True)
+    context = Unicode(&#34;Planet&#34;, read_only=True)
+    center = Tuple(CFloat(), CFloat(), default_value=(0.0, 0.0)).tag(sync=True)
+    zoom_opts = Dict().tag(sync=True)
+
+    time = Unicode().tag(sync=True)
+
+    layers = Tuple().tag(
+        trait=Instance(Layer),
+        sync=True,
+        **widget_serialization
+    )
+
+    def __init__(self, **kwargs):
+        super(MizarMap, self).__init__(**kwargs)
+        self.set_trait(&#34;context&#34;, _CRS_TO_CONTEXT[self.crs])
+
+        self.on_msg(self._handle_mizar_event)
+
+    _layer_ids = List()
+
+    @validate(&#39;layers&#39;)
+    def _validate_layers(self, proposal):
+        &#39;&#39;&#39;Validate layers list.
+
+        Makes sure only one instance of any given layer can exist in the
+        layers list.
+        &#39;&#39;&#39;
+        self._layer_ids = [layer.model_id for layer in proposal.value]
+        if len(set(self._layer_ids)) != len(self._layer_ids):
+            raise LayerException(
+                &#39;duplicate layer detected, only use each layer once&#39;
+            )
+        return proposal.value
+
+    def add_layer(self, layer):
+        &#34;&#34;&#34;Add a layer on the map.
+
+        Parameters
+        ----------
+        layer: Layer instance
+            The new layer to add.
+        &#34;&#34;&#34;
+        if layer.model_id in self._layer_ids:
+            raise LayerException(&#39;layer already on map: %r&#39; % layer)
+        self.layers = tuple([layer for layer in self.layers] + [layer])
+
+    def remove_layer(self, rm_layer):
+        &#34;&#34;&#34;Remove a layer from the map.
+
+        Parameters
+        ----------
+        rm_layer: Layer instance
+            The layer to remove.
+        &#34;&#34;&#34;
+        if rm_layer.model_id not in self._layer_ids:
+            raise LayerException(&#39;layer not on map: %r&#39; % rm_layer)
+        self.layers = tuple([
+            layer
+            for layer in self.layers
+            if layer.model_id != rm_layer.model_id
+        ])
+
+    def clear_layers(self):
+        &#34;&#34;&#34;Remove all layers from the map.&#34;&#34;&#34;
+        self.layers = ()
+
+    # Event handling
+    _interaction_callbacks = Instance(CallbackDispatcher, ())
+
+    def _handle_mizar_event(self, _, content, buffers):
+        if content.get(&#39;event&#39;, &#39;&#39;) == &#39;interaction&#39;:
+            self._interaction_callbacks(**content)
+
+    @validate(&#34;zoom_opts&#34;)
+    def _valid_zoom_opts(self, proposal):
+        zoom_opts = proposal[&#34;value&#34;]
+        distance = zoom_opts.get(&#34;distance&#34;)
+        if distance is not None and not isinstance(distance, (int, float)):
+            raise TraitError(&#34;&#39;distance&#39; must be an integer.&#34;)
+        return zoom_opts
+
+    def zoom_to(self, center, **kwargs):
+        &#34;&#34;&#34;Zooms to a 3D position (longitude, latitude).
+
+        Parameters
+        ----------
+        center : Tuple(Float, Float)
+            Spatial position in decimal degree [longitude, latitude]
+        kwargs:
+            distance: int
+                Planet only. Final zooming distance in meters
+            fov: float
+                Sky only. Field of view of the camera in decimal degree
+
+        &#34;&#34;&#34;
+        # On the JS side: call zoomTo watching simultaneously both these
+        # parameters to trigger a single call to the method.
+        self.center = center
+        self.zoom_opts = kwargs</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>ipywidgets.widgets.domwidget.DOMWidget</li>
+<li>ipywidgets.widgets.widget.Widget</li>
+<li>ipywidgets.widgets.widget.LoggingHasTraits</li>
+<li>traitlets.traitlets.HasTraits</li>
+<li>traitlets.traitlets.HasDescriptors</li>
+<li><a title="ipymizar.mizar.InteractMixin" href="#ipymizar.mizar.InteractMixin">InteractMixin</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="ipymizar.mizar.MizarMap.center"><code class="name">var <span class="ident">center</span></code></dt>
+<dd>
+<div class="desc"><p>An instance of a Python tuple.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.MizarMap.context"><code class="name">var <span class="ident">context</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.MizarMap.crs"><code class="name">var <span class="ident">crs</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.MizarMap.layers"><code class="name">var <span class="ident">layers</span></code></dt>
+<dd>
+<div class="desc"><p>An instance of a Python tuple.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.MizarMap.time"><code class="name">var <span class="ident">time</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.MizarMap.window_url"><code class="name">var <span class="ident">window_url</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.MizarMap.zoom_opts"><code class="name">var <span class="ident">zoom_opts</span></code></dt>
+<dd>
+<div class="desc"><p>An instance of a Python dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="ipymizar.mizar.MizarMap.add_layer"><code class="name flex">
+<span>def <span class="ident">add_layer</span></span>(<span>self, layer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add a layer on the map.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>layer</code></strong> :&ensp;<code><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a> instance</code></dt>
+<dd>The new layer to add.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_layer(self, layer):
+    &#34;&#34;&#34;Add a layer on the map.
+
+    Parameters
+    ----------
+    layer: Layer instance
+        The new layer to add.
+    &#34;&#34;&#34;
+    if layer.model_id in self._layer_ids:
+        raise LayerException(&#39;layer already on map: %r&#39; % layer)
+    self.layers = tuple([layer for layer in self.layers] + [layer])</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.MizarMap.clear_layers"><code class="name flex">
+<span>def <span class="ident">clear_layers</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Remove all layers from the map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clear_layers(self):
+    &#34;&#34;&#34;Remove all layers from the map.&#34;&#34;&#34;
+    self.layers = ()</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.MizarMap.remove_layer"><code class="name flex">
+<span>def <span class="ident">remove_layer</span></span>(<span>self, rm_layer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Remove a layer from the map.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>rm_layer</code></strong> :&ensp;<code><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a> instance</code></dt>
+<dd>The layer to remove.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def remove_layer(self, rm_layer):
+    &#34;&#34;&#34;Remove a layer from the map.
+
+    Parameters
+    ----------
+    rm_layer: Layer instance
+        The layer to remove.
+    &#34;&#34;&#34;
+    if rm_layer.model_id not in self._layer_ids:
+        raise LayerException(&#39;layer not on map: %r&#39; % rm_layer)
+    self.layers = tuple([
+        layer
+        for layer in self.layers
+        if layer.model_id != rm_layer.model_id
+    ])</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.MizarMap.zoom_to"><code class="name flex">
+<span>def <span class="ident">zoom_to</span></span>(<span>self, center, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Zooms to a 3D position (longitude, latitude).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>center</code></strong> :&ensp;<code>Tuple(Float, Float)</code></dt>
+<dd>Spatial position in decimal degree [longitude, latitude]</dd>
+</dl>
+<p>kwargs:
+distance: int
+Planet only. Final zooming distance in meters
+fov: float
+Sky only. Field of view of the camera in decimal degree</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def zoom_to(self, center, **kwargs):
+    &#34;&#34;&#34;Zooms to a 3D position (longitude, latitude).
+
+    Parameters
+    ----------
+    center : Tuple(Float, Float)
+        Spatial position in decimal degree [longitude, latitude]
+    kwargs:
+        distance: int
+            Planet only. Final zooming distance in meters
+        fov: float
+            Sky only. Field of view of the camera in decimal degree
+
+    &#34;&#34;&#34;
+    # On the JS side: call zoomTo watching simultaneously both these
+    # parameters to trigger a single call to the method.
+    self.center = center
+    self.zoom_opts = kwargs</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="ipymizar.mizar.OSMLayer"><code class="flex name class">
+<span>class <span class="ident">OSMLayer</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>OpenStreetMap layer class.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>url</code></strong> :&ensp;<code>str</code></dt>
+<dd>Url to the OSM server, 'https://c.tile.openstreetmap.org' by default.</dd>
+</dl>
+<p>Public constructor</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OSMLayer(Layer):
+    &#34;&#34;&#34;OpenStreetMap layer class.
+
+    Attributes
+    ----------
+    url: str
+        Url to the OSM server, &#39;https://c.tile.openstreetmap.org&#39; by default.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarOSMLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarOSMLayerModel&#39;).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode(&#39;https://c.tile.openstreetmap.org&#39;).tag(sync=True)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></li>
+<li>ipywidgets.widgets.widget.Widget</li>
+<li>ipywidgets.widgets.widget.LoggingHasTraits</li>
+<li>traitlets.traitlets.HasTraits</li>
+<li>traitlets.traitlets.HasDescriptors</li>
+<li><a title="ipymizar.mizar.InteractMixin" href="#ipymizar.mizar.InteractMixin">InteractMixin</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="ipymizar.mizar.OSMLayer.url"><code class="name">var <span class="ident">url</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ipymizar.mizar.Layer.background" href="#ipymizar.mizar.Layer.background">background</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.name" href="#ipymizar.mizar.Layer.name">name</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.opacity" href="#ipymizar.mizar.Layer.opacity">opacity</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.visible" href="#ipymizar.mizar.Layer.visible">visible</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ipymizar.mizar.WMSLayer"><code class="flex name class">
+<span>class <span class="ident">WMSLayer</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>WMS layer class.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>url</code></strong> :&ensp;<code>str</code></dt>
+<dd>Url to the WMS server.</dd>
+<dt><strong><code>layers</code></strong> :&ensp;<code>str</code></dt>
+<dd>Comma-separated list of WMS layers to show.</dd>
+<dt><strong><code>format</code></strong> :&ensp;<code>str</code></dt>
+<dd>WMS image format (use <code>'image/png'</code> for layers with transparency).
+'image/jpeg' by default</dd>
+<dt><strong><code>transparent</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true, the WMS service will return images with transparency.
+False by default.</dd>
+</dl>
+<p>Public constructor</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class WMSLayer(Layer):
+    &#34;&#34;&#34;WMS layer class.
+
+    Attributes
+    ----------
+    url: str
+        Url to the WMS server.
+    layers: str
+        Comma-separated list of WMS layers to show.
+    format: str
+        WMS image format (use `&#39;image/png&#39;` for layers with transparency).
+        &#39;image/jpeg&#39; by default
+    transparent: bool
+        If true, the WMS service will return images with transparency.
+        False by default.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarWMSLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarWMSLayerModel&#39;).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode(&#39;&#39;).tag(sync=True)
+    layers = Unicode().tag(sync=True)
+    format = Unicode(&#39;image/jpeg&#39;).tag(sync=True)
+    transparent = Bool(False).tag(sync=True)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></li>
+<li>ipywidgets.widgets.widget.Widget</li>
+<li>ipywidgets.widgets.widget.LoggingHasTraits</li>
+<li>traitlets.traitlets.HasTraits</li>
+<li>traitlets.traitlets.HasDescriptors</li>
+<li><a title="ipymizar.mizar.InteractMixin" href="#ipymizar.mizar.InteractMixin">InteractMixin</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="ipymizar.mizar.WMSLayer.format"><code class="name">var <span class="ident">format</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.WMSLayer.layers"><code class="name">var <span class="ident">layers</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.WMSLayer.transparent"><code class="name">var <span class="ident">transparent</span></code></dt>
+<dd>
+<div class="desc"><p>A boolean (True, False) trait.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.WMSLayer.url"><code class="name">var <span class="ident">url</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ipymizar.mizar.Layer.background" href="#ipymizar.mizar.Layer.background">background</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.name" href="#ipymizar.mizar.Layer.name">name</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.opacity" href="#ipymizar.mizar.Layer.opacity">opacity</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.visible" href="#ipymizar.mizar.Layer.visible">visible</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ipymizar.mizar.WMTSLayer"><code class="flex name class">
+<span>class <span class="ident">WMTSLayer</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>WMTS layer class.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>url</code></strong> :&ensp;<code>str</code></dt>
+<dd>Url to the WMTS server.</dd>
+<dt><strong><code>layers</code></strong> :&ensp;<code>str</code></dt>
+<dd>Comma-separated list of WMS layers to show.</dd>
+<dt><strong><code>format</code></strong> :&ensp;<code>str</code></dt>
+<dd>WMS image format (use <code>'image/png'</code> for layers with transparency).
+'image/jpeg' by default</dd>
+<dt><strong><code>transparent</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true, the WMS service will return images with transparency.
+False by default.</dd>
+</dl>
+<p>Public constructor</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class WMTSLayer(Layer):
+    &#34;&#34;&#34;WMTS layer class.
+
+    Attributes
+    ----------
+    url: str
+        Url to the WMTS server.
+    layers: str
+        Comma-separated list of WMS layers to show.
+    format: str
+        WMS image format (use `&#39;image/png&#39;` for layers with transparency).
+        &#39;image/jpeg&#39; by default
+    transparent: bool
+        If true, the WMS service will return images with transparency.
+        False by default.
+    &#34;&#34;&#34;
+
+    _view_name = Unicode(&#39;MizarWMTSLayerView&#39;).tag(sync=True)
+    _model_name = Unicode(&#39;MizarWMTSLayerModel&#39;).tag(sync=True)
+
+    # Some specific properties of this layer
+    url = Unicode().tag(sync=True)
+    layers = Unicode().tag(sync=True)
+    format = Unicode(&#39;image/jpeg&#39;).tag(sync=True)
+    transparent = Bool(False).tag(sync=True)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></li>
+<li>ipywidgets.widgets.widget.Widget</li>
+<li>ipywidgets.widgets.widget.LoggingHasTraits</li>
+<li>traitlets.traitlets.HasTraits</li>
+<li>traitlets.traitlets.HasDescriptors</li>
+<li><a title="ipymizar.mizar.InteractMixin" href="#ipymizar.mizar.InteractMixin">InteractMixin</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="ipymizar.mizar.WMTSLayer.format"><code class="name">var <span class="ident">format</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.WMTSLayer.layers"><code class="name">var <span class="ident">layers</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.WMTSLayer.transparent"><code class="name">var <span class="ident">transparent</span></code></dt>
+<dd>
+<div class="desc"><p>A boolean (True, False) trait.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+<dt id="ipymizar.mizar.WMTSLayer.url"><code class="name">var <span class="ident">url</span></code></dt>
+<dd>
+<div class="desc"><p>A trait for unicode strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, obj, cls=None):
+    &#34;&#34;&#34;Get the value of the trait by self.name for the instance.
+
+    Default values are instantiated when :meth:`HasTraits.__new__`
+    is called.  Thus by the time this method gets called either the
+    default value or a user defined value (they called :meth:`__set__`)
+    is in the :class:`HasTraits` instance.
+    &#34;&#34;&#34;
+    if obj is None:
+        return self
+    else:
+        return self.get(obj, cls)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ipymizar.mizar.Layer.background" href="#ipymizar.mizar.Layer.background">background</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.name" href="#ipymizar.mizar.Layer.name">name</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.opacity" href="#ipymizar.mizar.Layer.opacity">opacity</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.visible" href="#ipymizar.mizar.Layer.visible">visible</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="ipymizar" href="index.html">ipymizar</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="ipymizar.mizar.CRS" href="#ipymizar.mizar.CRS">CRS</a></code></h4>
+<ul class="two-column">
+<li><code><a title="ipymizar.mizar.CRS.Equatorial" href="#ipymizar.mizar.CRS.Equatorial">Equatorial</a></code></li>
+<li><code><a title="ipymizar.mizar.CRS.Galactic" href="#ipymizar.mizar.CRS.Galactic">Galactic</a></code></li>
+<li><code><a title="ipymizar.mizar.CRS.HorizontalLocal" href="#ipymizar.mizar.CRS.HorizontalLocal">HorizontalLocal</a></code></li>
+<li><code><a title="ipymizar.mizar.CRS.Mars_2000" href="#ipymizar.mizar.CRS.Mars_2000">Mars_2000</a></code></li>
+<li><code><a title="ipymizar.mizar.CRS.Mars_2000_old" href="#ipymizar.mizar.CRS.Mars_2000_old">Mars_2000_old</a></code></li>
+<li><code><a title="ipymizar.mizar.CRS.Moon_2000" href="#ipymizar.mizar.CRS.Moon_2000">Moon_2000</a></code></li>
+<li><code><a title="ipymizar.mizar.CRS.Moon_2000_old" href="#ipymizar.mizar.CRS.Moon_2000_old">Moon_2000_old</a></code></li>
+<li><code><a title="ipymizar.mizar.CRS.Sun" href="#ipymizar.mizar.CRS.Sun">Sun</a></code></li>
+<li><code><a title="ipymizar.mizar.CRS.WGS84" href="#ipymizar.mizar.CRS.WGS84">WGS84</a></code></li>
+<li><code><a title="ipymizar.mizar.CRS.list" href="#ipymizar.mizar.CRS.list">list</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ipymizar.mizar.GeoJSONLayer" href="#ipymizar.mizar.GeoJSONLayer">GeoJSONLayer</a></code></h4>
+<ul class="">
+<li><code><a title="ipymizar.mizar.GeoJSONLayer.data" href="#ipymizar.mizar.GeoJSONLayer.data">data</a></code></li>
+<li><code><a title="ipymizar.mizar.GeoJSONLayer.style" href="#ipymizar.mizar.GeoJSONLayer.style">style</a></code></li>
+<li><code><a title="ipymizar.mizar.GeoJSONLayer.url" href="#ipymizar.mizar.GeoJSONLayer.url">url</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ipymizar.mizar.HipsLayer" href="#ipymizar.mizar.HipsLayer">HipsLayer</a></code></h4>
+<ul class="">
+<li><code><a title="ipymizar.mizar.HipsLayer.url" href="#ipymizar.mizar.HipsLayer.url">url</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ipymizar.mizar.InteractMixin" href="#ipymizar.mizar.InteractMixin">InteractMixin</a></code></h4>
+<ul class="">
+<li><code><a title="ipymizar.mizar.InteractMixin.interact" href="#ipymizar.mizar.InteractMixin.interact">interact</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ipymizar.mizar.Layer" href="#ipymizar.mizar.Layer">Layer</a></code></h4>
+<ul class="">
+<li><code><a title="ipymizar.mizar.Layer.background" href="#ipymizar.mizar.Layer.background">background</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.name" href="#ipymizar.mizar.Layer.name">name</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.opacity" href="#ipymizar.mizar.Layer.opacity">opacity</a></code></li>
+<li><code><a title="ipymizar.mizar.Layer.visible" href="#ipymizar.mizar.Layer.visible">visible</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ipymizar.mizar.LayerException" href="#ipymizar.mizar.LayerException">LayerException</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ipymizar.mizar.MizarMap" href="#ipymizar.mizar.MizarMap">MizarMap</a></code></h4>
+<ul class="two-column">
+<li><code><a title="ipymizar.mizar.MizarMap.add_layer" href="#ipymizar.mizar.MizarMap.add_layer">add_layer</a></code></li>
+<li><code><a title="ipymizar.mizar.MizarMap.center" href="#ipymizar.mizar.MizarMap.center">center</a></code></li>
+<li><code><a title="ipymizar.mizar.MizarMap.clear_layers" href="#ipymizar.mizar.MizarMap.clear_layers">clear_layers</a></code></li>
+<li><code><a title="ipymizar.mizar.MizarMap.context" href="#ipymizar.mizar.MizarMap.context">context</a></code></li>
+<li><code><a title="ipymizar.mizar.MizarMap.crs" href="#ipymizar.mizar.MizarMap.crs">crs</a></code></li>
+<li><code><a title="ipymizar.mizar.MizarMap.layers" href="#ipymizar.mizar.MizarMap.layers">layers</a></code></li>
+<li><code><a title="ipymizar.mizar.MizarMap.remove_layer" href="#ipymizar.mizar.MizarMap.remove_layer">remove_layer</a></code></li>
+<li><code><a title="ipymizar.mizar.MizarMap.time" href="#ipymizar.mizar.MizarMap.time">time</a></code></li>
+<li><code><a title="ipymizar.mizar.MizarMap.window_url" href="#ipymizar.mizar.MizarMap.window_url">window_url</a></code></li>
+<li><code><a title="ipymizar.mizar.MizarMap.zoom_opts" href="#ipymizar.mizar.MizarMap.zoom_opts">zoom_opts</a></code></li>
+<li><code><a title="ipymizar.mizar.MizarMap.zoom_to" href="#ipymizar.mizar.MizarMap.zoom_to">zoom_to</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ipymizar.mizar.OSMLayer" href="#ipymizar.mizar.OSMLayer">OSMLayer</a></code></h4>
+<ul class="">
+<li><code><a title="ipymizar.mizar.OSMLayer.url" href="#ipymizar.mizar.OSMLayer.url">url</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ipymizar.mizar.WMSLayer" href="#ipymizar.mizar.WMSLayer">WMSLayer</a></code></h4>
+<ul class="">
+<li><code><a title="ipymizar.mizar.WMSLayer.format" href="#ipymizar.mizar.WMSLayer.format">format</a></code></li>
+<li><code><a title="ipymizar.mizar.WMSLayer.layers" href="#ipymizar.mizar.WMSLayer.layers">layers</a></code></li>
+<li><code><a title="ipymizar.mizar.WMSLayer.transparent" href="#ipymizar.mizar.WMSLayer.transparent">transparent</a></code></li>
+<li><code><a title="ipymizar.mizar.WMSLayer.url" href="#ipymizar.mizar.WMSLayer.url">url</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ipymizar.mizar.WMTSLayer" href="#ipymizar.mizar.WMTSLayer">WMTSLayer</a></code></h4>
+<ul class="">
+<li><code><a title="ipymizar.mizar.WMTSLayer.format" href="#ipymizar.mizar.WMTSLayer.format">format</a></code></li>
+<li><code><a title="ipymizar.mizar.WMTSLayer.layers" href="#ipymizar.mizar.WMTSLayer.layers">layers</a></code></li>
+<li><code><a title="ipymizar.mizar.WMTSLayer.transparent" href="#ipymizar.mizar.WMTSLayer.transparent">transparent</a></code></li>
+<li><code><a title="ipymizar.mizar.WMTSLayer.url" href="#ipymizar.mizar.WMTSLayer.url">url</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
