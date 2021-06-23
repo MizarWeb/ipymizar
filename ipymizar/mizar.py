@@ -149,25 +149,12 @@ class MizarMap(DOMWidget, InteractMixin):
     window_url = Unicode(read_only=True).tag(sync=True)
 
     crs = Unicode(CRS.WGS84).tag(sync=True)
-    zoom = Union(
-        (
-            Tuple(CFloat(), CFloat(), CFloat()),
-            Tuple(CFloat(), CFloat()),
-        ),
-        default_value=(0, 0)
-    ).tag(sync=True)
+    center = Tuple(CFloat(), CFloat(), default_value=(0, 0)).tag(sync=True)
+    zoom_opts = Dict().tag(sync=True)
+
     time = Unicode().tag(sync=True)
 
-    options = List(trait=Unicode()).tag(sync=True)
-
-    # zoom_control = Bool(True)
-
-    # layers = Tuple().tag(trait=Instance(Layer), sync=True, **widget_serialization)
-    layers = Tuple().tag(sync=True, **widget_serialization)
-
-    @default('options')
-    def _default_options(self):
-        return [name for name in self.traits(o=True)]
+    layers = Tuple().tag(trait=Instance(Layer), sync=True, **widget_serialization)
 
     def __init__(self, **kwargs):
         super(MizarMap, self).__init__(**kwargs)
@@ -225,32 +212,31 @@ class MizarMap(DOMWidget, InteractMixin):
     def on_interaction(self, callback, remove=False):
         self._interaction_callbacks.register_callback(callback, remove=remove)
 
-    _geo_pos = Tuple(CFloat(), CFloat(), default_value=(0, 0)).tag(sync=True)
-    _zoom_to_opts = Dict().tag(sync=True)
+    @validate("zoom_opts")
+    def _valid_zoom_opts(self, proposal):
+        zoom_opts = proposal["value"]
+        distance = zoom_opts.get("distance")
+        if distance is not None and not isinstance(distance, int):
+            raise TraitError("'distance' must be an integer.")
+        return zoom_opts
 
-    def zoom_to(self, geo_pos, **kwargs):
+    def zoom_to(self, center, **kwargs):
         """Zooms to a 3D position (longitude, latitude).
 
         Parameters
         ----------
-        geo_pos : Tuple(Float, Float)
+        center : Tuple(Float, Float)
             Spatial position in decimal degree [longitude, latitude]
         kwargs:
-            Common:
-                duration: int
-                    Duration of the animation in milliseconds
             Planet:
                 distance: int
-                    Final zooming distance in meters - if not set, this is the current distance
-                tilt: int
-                    Defines the tilt at the end of animation
-                heading: int
-                    Defines the heading at the end of animation. By default, the current heading is conserved
+                    Final zooming distance in meters
             Sky:
                 fov: float
-                    Field of view in degree
+                    Field of view of the camera in decimal degree
 
         """
         # On the JS side: call zoomTo watching simultaneously both these parameters
-        self._geo_pos = geo_pos
-        self._zoom_to_opts = kwargs
+        # to trigger a single call to the method.
+        self.center = center
+        self.zoom_opts = kwargs
