@@ -1,14 +1,24 @@
 # ipymizar
 
-A Jupyter / Mizar plugin to display interactive 3D views of planets and the sky in a notebook.
+A Jupyter / Mizar plugin to display interactive planets and Sky maps in a notebook.
 
 ## Python API
 
-### Create a Planet Map and update it
+It currently supports these types of layer: 
+ - WMS
+ - OpenStreetMap
+ - Hips
+ - GeoJSON
+
+## Examples
+
+You can find many notebook examples in the examples directory.
+
+### A Planet Map
 
 ![Earth](IntroEarth.png)
 
-### Create a Sky Map and update it
+### A Sky Map
 
 ![Sky](IntroSky.png)
 
@@ -16,13 +26,15 @@ A Jupyter / Mizar plugin to display interactive 3D views of planets and the sky 
 
 To install use pip:
 
-    $ pip install ipymizar
+    $ git clone https://github.com/MizarWeb/ipymizar
+    $ cd ipymizar
+    $ pip install .
 
 ## Dev installation
 
 Clone the repo:
 
-    $ git clone LINKTOGIT
+    $ git clone https://github.com/MizarWeb/ipymizar
     $ cd ipymizar
 
 For a development installation, you can use `conda` to create a dev environment with the required dependencies (including [Node.js](https://nodejs.org) and [Yarn version 1](https://classic.yarnpkg.com/)):
@@ -46,7 +58,6 @@ When developing for JupyterLab (launched with `jupyter lab`), run the following 
 This command has to be run whatever the version of JupyterLab (not required for the classic version):
 
     $ jupyter labextension develop --overwrite .
-
 
 Then you need to rebuild the front-end (Javascript) when you make a code change:
 
