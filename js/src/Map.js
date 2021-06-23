@@ -15,8 +15,8 @@ export class MizarMapModel extends widgets.DOMWidgetModel {
       _view_module: 'jupyter-mizar',
       crs: 'CRS:84',
       layers: [],
-      _geo_pos: [0.0, 0.0],
-      _zoom_to_opts: {}
+      center: [0.0, 0.0],
+      zoom_opts: {}
     };
   }
 
@@ -92,12 +92,19 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
         canvas: this.map_container
       };
       var crs = this.model.get('crs');
+      if (this.model.get('zoom_opts')['distance']) {
+        var initTarget = this.model.get('center').concat(this.model.get('zoom_opts')['distance'])
+      } else {
+        var initTarget = this.model.get('center')
+      }
       var context = {
         coordinateSystem: {
           geoideName: crs
         },
         navigation: {
-          initTarget: this.model.get('init_target')
+          initTarget: initTarget,
+          inertia: true
+          // initTarget: this.model.get('init_target')
         }
       };
       switch (Mizar.CRS_TO_CONTEXT[crs]) {
@@ -117,11 +124,11 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
   model_events() {
     this.listenTo(
       this.model,
-      'change:_geo_pos change:_zoom_to_opts',
+      'change:center change:zoom_opts',
       function () {
         var nav = this.obj.getActivatedContext().getNavigation();
-        var geoPos = this.model.get('_geo_pos')
-        var options = this.model.get('_zoom_to_opts')
+        var geoPos = this.model.get('center')
+        var options = this.model.get('zoom_opts')
         nav.zoomTo(geoPos, options);
       },
       this
@@ -131,20 +138,6 @@ export class MizarMapView extends utils.MizarDOMWidgetView {
       'change:layers',
       function () {
         this.layer_views.update(this.model.get('layers'));
-      },
-      this
-    );
-    this.listenTo(
-      this.model,
-      'change:zoom',
-      function () {
-        var nav = this.obj.getActivatedContext().getNavigation();
-        var zoom = this.model.get('zoom')
-        var geoPos = [zoom[0], zoom[1]]
-        var options = zoom[2] ? {
-          distance: zoom[2]
-        } : undefined
-        nav.zoomTo(geoPos, options);
       },
       this
     );
