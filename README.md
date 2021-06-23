@@ -2,7 +2,11 @@
 
 A Jupyter / Mizar plugin to display interactive planets and Sky maps in a notebook.
 
+The implementation is based on [ipyleaflet](https://github.com/jupyter-widgets/ipyleaflet).
+
 ## Python API
+
+You can view our Python API [on the following link](https://MizarWeb.github.io/ipymizar/mizar.html).
 
 It currently supports these types of layer: 
  - WMS
@@ -84,3 +88,11 @@ Or one of these commands to build one of these extensions in watch mode (automat
 or
 
     $ yarn watch:labextension
+
+### Documentation
+
+You can generate the HTML documentation using : 
+
+    $ pdoc --html ipymizar
+
+Then commit HTML files on the gh-pages branch.
