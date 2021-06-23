@@ -216,7 +216,7 @@ class MizarMap(DOMWidget, InteractMixin):
     def _valid_zoom_opts(self, proposal):
         zoom_opts = proposal["value"]
         distance = zoom_opts.get("distance")
-        if distance is not None and not isinstance(distance, int):
+        if distance is not None and not isinstance(distance, (int, float)):
             raise TraitError("'distance' must be an integer.")
         return zoom_opts
 
