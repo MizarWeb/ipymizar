@@ -24,7 +24,7 @@ You can find many notebook examples in the examples directory.
 
 ## Installation
 
-To install use pip:
+To install this plugin, use pip:
 
     $ git clone https://github.com/MizarWeb/ipymizar
     $ cd ipymizar
