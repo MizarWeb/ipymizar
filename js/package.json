@@ -12,8 +12,8 @@
     "type": "git",
     "url": ""
   },
-  "license": "MIT",
-  "author": "CNES",
+  "license": "GPL-3.0",
+  "author": "CNES (https://cnes.fr)",
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --mode=development && yarn run build:labextension:dev",
@@ -24,7 +24,9 @@
     "watch:labextension": "jupyter labextension watch .",
     "clean": "rimraf dist/ && rimraf ../ipymizar/labextension/ && rimraf ../ipymizar/nbextension",
     "prepublish": "npm run clean && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src"
   },
   "dependencies": {
     "@jupyter-widgets/base": "^2 || ^3 || ^4.0.0",

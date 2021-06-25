@@ -1,82 +1,111 @@
 
-// const L = require('../leaflet.js');
-const featuregroup = require('./FeatureGroup.js');
+const Mizar = require('regards-mizar').default
+const layer = require('./Layer.js');
 
-export class MizarGeoJSONModel extends featuregroup.MizarFeatureGroupModel {
+export class MizarGeoJSONLayerModel extends layer.MizarLayerModel {
   defaults() {
     return {
       ...super.defaults(),
-      _view_name: 'MizarGeoJSONView',
-      _model_name: 'MizarGeoJSONModel',
+      _view_name: 'MizarGeoJSONLayerView',
+      _model_name: 'MizarGeoJSONLayerModel',
+      visible: true,
       data: {},
       style: {},
-      hover_style: {},
-      point_style: {}
     };
   }
 }
 
-export class MizarGeoJSONView extends featuregroup.MizarFeatureGroupView {
+export class MizarGeoJSONLayerView extends layer.MizarLayerView {
   create_obj() {
-    var style = feature => {
-      const model_style = this.model.get('style');
-      const feature_style = feature.properties.style || {};
-      return {
-         ...feature_style,
-         ...model_style
-      };
-    };
-
-    var options = {
-      style: style,
-      onEachFeature: (feature, layer) => {
-        var mouseevent = e => {
-          if (e.type == 'mouseover') {
-            layer.setStyle(this.model.get('hover_style'));
-            layer.once('mouseout', () => {
-              this.obj.resetStyle(layer);
-            });
-          }
-          this.send({
-            event: e.type,
-            feature: feature,
-            properties: feature.properties,
-            id: feature.id
-          });
-        };
-        layer.on({
-          mouseover: mouseevent,
-          click: mouseevent
-        });
-      }
-    };
-
-    var point_style = this.model.get('point_style');
-
-    if (Object.keys(point_style).length !== 0) {
-      options.pointToLayer = function(feature, latlng) {
-        return new L.CircleMarker(latlng, point_style);
-      };
+    const mizarMap = this.map_view.obj
+    const basicOptions = this.getBasicConf()
+    const options = {
+      ...basicOptions,
+      type: Mizar.LAYER.GeoJSON,
     }
+    delete options.baseUrl
+    if (this.model.has('style')) {
+      options.style = this.model.get('style')
+    }
+    if (this.model.get('url')) {
+      options.url = this.model.get('url')
+    }
+    mizarMap.addLayer(options, (layerId) => {
+      // store layer
+      this.obj = mizarMap.getLayerByID(layerId)
+      this.addFeatures()
+    })
+  }
 
-    this.obj = L.geoJson(this.model.get('data'), options);
+  addFeatures() {
+    const data = this.model.get('data')
+    this.obj.addFeatureCollection(data)
   }
 
   model_events() {
+    super.model_events()
     this.listenTo(
       this.model,
       'change:style',
-      function() {
-        this.obj.setStyle(this.model.get('style'));
+      function () {
+        const style = this.model.get('style')
+        if (style.extrusionScale) {
+          this.obj.style.setExtrusionScale(style.extrusionScale)
+        }
+        if (style.fill) {
+          this.obj.style.setFill(style.fill)
+        }
+        if (style.fillColor) {
+          this.obj.style.setFillColor(style.fillColor)
+        }
+        if (style.fillShader) {
+          this.obj.style.setFillShader(style.fillShader)
+        }
+        if (style.fillTexture) {
+          this.obj.style.setFillTexture(style.fillTexture)
+        }
+        if (style.fillTextureURL) {
+          this.obj.style.setFillTextureURL(style.fillTextureURL)
+        }
+        if (style.icon) {
+          this.obj.style.setIcon(style.icon)
+        }
+        if (style.iconURL) {
+          this.obj.style.setIconURL(style.iconURL)
+        }
+        if (style.label) {
+          this.obj.style.setLabel(style.label)
+        }
+        if (style.onTerrain) {
+          this.obj.style.setOnTerrain(style.onTerrain)
+        }
+        if (style.opacity) {
+          this.obj.style.setOpacity(style.opacity)
+        }
+        if (style.pointMaxSize) {
+          this.obj.style.setPointMaxSize(style.pointMaxSize)
+        }
+        if (style.strokeColor) {
+          this.obj.style.setStrokeColor(style.strokeColor)
+        }
+        if (style.strokeWidth) {
+          this.obj.style.setStrokeWidth(style.strokeWidth)
+        }
+        if (style.textColor) {
+          this.obj.style.setTextColor(style.textColor)
+        }
+        if (style.zIndex) {
+          this.obj.style.setZIndex(style.zIndex)
+        }
       },
       this
     );
     this.listenTo(
       this.model,
       'change:data',
-      function() {
-        this.obj.clearLayers();
-        this.obj.addData(this.model.get('data'));
+      function () {
+        this.obj.removeAllFeatures()
+        this.addFeatures()
       },
       this
     );
